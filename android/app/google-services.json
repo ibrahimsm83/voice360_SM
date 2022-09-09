@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "20677310127",
+    "project_id": "voice360-8d039",
+    "storage_bucket": "voice360-8d039.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20677310127:android:205590d9879fedef38c65a",
+        "android_client_info": {
+          "package_name": "com.appicator.itp_voice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "20677310127-nclmgn86388m2schfcefs9ri5gi3hsu5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5ceUb5SPLFW4QJUDKrtPHjYwPxWF2LGs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "20677310127-nclmgn86388m2schfcefs9ri5gi3hsu5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
