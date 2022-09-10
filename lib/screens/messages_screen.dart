@@ -103,7 +103,9 @@ class MessagesScreen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () {
-                                Get.toNamed(Routes.CHAT_SCREEN_ROUTE);
+                                Get.toNamed(Routes.CHAT_SCREEN_ROUTE,
+                                    arguments: con.threads[index]
+                                        .participants![0].messageThreadId);
                               },
                               child: Container(
                                 margin: EdgeInsets.symmetric(
@@ -251,10 +253,16 @@ class MessagesScreen extends StatelessWidget {
                                                         .length -
                                                     2),
                                         style: TextStyle(
-                                            fontSize: 13.sp,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .tertiary),
+                                                fontSize: 13.sp,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .tertiary)
+                                            .copyWith(
+                                                color: con.threads[index]
+                                                            .threadRead ==
+                                                        false
+                                                    ? Color(0xFF242424)
+                                                    : Color(0xFF6B6F80)),
                                         // ((index == 0 || index == 1 || index == 2)
                                         //         ? "${DateFormat('hh:mm').format(DateTime.now())}"
                                         //         : (index == 3 || index == 4)

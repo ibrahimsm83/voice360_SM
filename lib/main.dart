@@ -5,12 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:itp_voice/controllers/bindings.dart';
+import 'package:itp_voice/notification_service.dart';
 import 'package:itp_voice/routes.dart';
 import 'package:itp_voice/screens/base_screen.dart';
 import 'package:itp_voice/screens/login_screen.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
   // await setupFlutterNotifications();
   // showFlutterNotification(message);
   // If you're going to use other Firebase services in the background, such as Firestore,
@@ -23,6 +24,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
   // Step 3
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  LocalNotificationService.initialize();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,

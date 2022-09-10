@@ -147,4 +147,14 @@ class Endpoints {
     return Config.BASE_URL_ITP_VOICE +
         "${api_id}/my-extension/chat/sms/${number}";
   }
+
+  static String GET_THREAD_MESSAGES(api_id, number, threadId) {
+    return Config.BASE_URL_ITP_VOICE +
+        "${api_id}/my-extension/chat/sms/${number}/$threadId";
+  }
+
+  static String SEND_MESSAGE(api_id, number) {
+    return Config.BASE_URL_ITP_VOICE +
+        "${api_id}/my-extension/chat/sms/${number}";
+  }
 }

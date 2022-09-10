@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:itp_voice/models/get_contacts_reponse_model/user_contact.dart';
 
 import 'result.dart';
 
 class GetContactsReponseModel {
-  ContactsData? contactsData;
+  List<UserContact>? contacts;
   bool? errors;
   dynamic error;
   String? message;
@@ -14,7 +15,7 @@ class GetContactsReponseModel {
   dynamic startKey;
 
   GetContactsReponseModel({
-    this.contactsData,
+    this.contacts,
     this.errors,
     this.error,
     this.message,
@@ -25,14 +26,16 @@ class GetContactsReponseModel {
 
   @override
   String toString() {
-    return 'GetContactsReponseModel(result: $contactsData, errors: $errors, error: $error, message: $message, pageSize: $pageSize, nextStartKey: $nextStartKey, startKey: $startKey)';
+    return 'GetContactsReponseModel(result: $contacts, errors: $errors, error: $error, message: $message, pageSize: $pageSize, nextStartKey: $nextStartKey, startKey: $startKey)';
   }
 
   factory GetContactsReponseModel.fromMap(Map<String, dynamic> data) {
     return GetContactsReponseModel(
-      contactsData: data['result'] == null
+      contacts: data['result'] == null
           ? null
-          : ContactsData.fromMap(data['result'] as Map<String, dynamic>),
+          : (data['result'] as List<dynamic>)
+              .map((e) => UserContact.fromMap(e))
+              .toList(), //ContactsData.fromMap(data['result'] as Map<String, dynamic>),
       errors: data['errors'] as bool?,
       error: data['error'] as dynamic,
       message: data['message'] as String?,
@@ -43,7 +46,7 @@ class GetContactsReponseModel {
   }
 
   Map<String, dynamic> toMap() => {
-        'result': contactsData?.toMap(),
+        'result': contacts?..map((e) => e.toMap()).toList(),
         'errors': errors,
         'error': error,
         'message': message,
@@ -66,7 +69,7 @@ class GetContactsReponseModel {
   String toJson() => json.encode(toMap());
 
   GetContactsReponseModel copyWith({
-    ContactsData? result,
+    List<UserContact>? result,
     bool? errors,
     dynamic error,
     String? message,
@@ -75,7 +78,7 @@ class GetContactsReponseModel {
     dynamic startKey,
   }) {
     return GetContactsReponseModel(
-      contactsData: result ?? this.contactsData,
+      contacts: result ?? this.contacts,
       errors: errors ?? this.errors,
       error: error ?? this.error,
       message: message ?? this.message,
@@ -95,7 +98,7 @@ class GetContactsReponseModel {
 
   @override
   int get hashCode =>
-      contactsData.hashCode ^
+      contacts.hashCode ^
       errors.hashCode ^
       error.hashCode ^
       message.hashCode ^

@@ -3,6 +3,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:itp_voice/controllers/chat_controller.dart';
 import 'package:itp_voice/controllers/settings_controller.dart';
 import 'package:itp_voice/models/message.dart';
 import 'package:itp_voice/routes.dart';
@@ -20,6 +21,8 @@ class ChatScreen extends StatelessWidget {
   ScrollController? _scrollController;
 
   final double iconSize = 28.0;
+
+  ChatController con = Get.put(ChatController());
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +55,7 @@ class ChatScreen extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     // color: Colors.blue,
                     child: TextField(
+                      controller: con.messageController,
                       style: TextStyle(fontSize: 14.sp),
                       decoration: InputDecoration.collapsed(
                         hintStyle: TextStyle(
@@ -62,12 +66,16 @@ class ChatScreen extends StatelessWidget {
                     ),
                   ),
                   Spacer(),
-                  Container(
-                    margin: EdgeInsets.only(left: 20.w, right: 20.w, top: 8.h),
-                    height: 20.h,
-                    width: 20.h,
-                    child: Image.asset(
-                      "assets/images/send.png",
+                  GestureDetector(
+                    onTap: () => con.sendMessage(),
+                    child: Container(
+                      margin:
+                          EdgeInsets.only(left: 20.w, right: 20.w, top: 8.h),
+                      height: 20.h,
+                      width: 20.h,
+                      child: Image.asset(
+                        "assets/images/send.png",
+                      ),
                     ),
                   ),
                 ],
@@ -111,20 +119,48 @@ class ChatScreen extends StatelessWidget {
               height: 0,
             ),
             Expanded(
-              child: ListView.builder(
-                reverse: true,
-                shrinkWrap: true,
-                controller: _scrollController,
-                padding:
-                    EdgeInsets.symmetric(vertical: minValue * 7, horizontal: 0),
-                itemCount: myMessagesList.length,
-                itemBuilder: (context, index) {
-                  final Message message = myMessagesList[index];
-                  return MyMessageChatTile(
-                    message: message,
-                    isCurrentUser: message.senderId == 9,
-                  );
-                },
+              child: Obx(
+                () => con.isLoading.value == true
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ListView.builder(
+                        reverse: true,
+                        shrinkWrap: true,
+                        controller: _scrollController,
+                        padding: EdgeInsets.symmetric(
+                            vertical: minValue * 7, horizontal: 0),
+                        itemCount: con.messages?.result?.messages?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          final Message message = myMessagesList[index];
+                          return MyMessageChatTile(
+                            message: con.messages?.result?.messages?[index]
+                                    .messageBody ??
+                                '',
+                            isCurrentUser: (con.messages?.result
+                                        ?.messages?[index].messageParticipant ??
+                                    '') ==
+                                con.myNumber,
+                            deliveryTime: con.messages!.result!.messages![index]
+                                    .messageTimestamp!
+                                    .split(':')[0]
+                                    .substring(con.messages!.result!
+                                            .messages![index].messageTimestamp!
+                                            .split(':')[0]
+                                            .length -
+                                        2) +
+                                ':' +
+                                con.messages!.result!.messages![index]
+                                    .messageTimestamp!
+                                    .split(':')[1]
+                                    .substring(con.messages!.result!
+                                            .messages![index].messageTimestamp!
+                                            .split(':')[1]
+                                            .length -
+                                        2),
+                          );
+                        },
+                      ),
               ),
             ),
           ],

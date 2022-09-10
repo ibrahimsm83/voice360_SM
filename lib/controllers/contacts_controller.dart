@@ -28,24 +28,19 @@ class ContactsController extends GetxController {
     isContactsLoading = false;
 
     if (res.runtimeType == GetContactsReponseModel) {
+      print('================ERROR------------');
       GetContactsReponseModel model = res;
-      if (model.contactsData!.modelList!.userContacts!.isNotEmpty) {
+      if (model.contacts!.isNotEmpty) {
         for (int i = 0; i < Helpers.alphabet.length; i++) {
           filteredData.putIfAbsent(Helpers.alphabet[i], () => [""]);
-          for (int j = 0;
-              j < model.contactsData!.modelList!.userContacts!.length;
-              j++) {
+          for (int j = 0; j < model.contacts!.length; j++) {
             if (Helpers.alphabet[i] ==
-                model.contactsData!.modelList!.userContacts![j].name![0]
-                    .toLowerCase()) {
-              filteredData[Helpers.alphabet[i]]!.add(model
-                      .contactsData!.modelList!.userContacts![j].name
-                      .toString() +
-                  model.contactsData!.modelList!.userContacts![j].pk
-                      .toString());
+                model.contacts![j].name![0].toLowerCase()) {
+              filteredData[Helpers.alphabet[i]]!.add(
+                  model.contacts![j].name.toString() +
+                      model.contacts![j].pk.toString());
 
-              unfilteredData
-                  .add(model.contactsData!.modelList!.userContacts![j]);
+              unfilteredData.add(model.contacts![j]);
             }
           }
         }

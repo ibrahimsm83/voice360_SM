@@ -5,10 +5,12 @@ import 'package:itp_voice/models/message.dart';
 
 class MyMessageChatTile extends StatelessWidget {
   final double minValue = 8.0;
-  final Message? message;
+  final String? message;
   final bool isCurrentUser;
+  final String deliveryTime;
 
-  MyMessageChatTile({this.message, required this.isCurrentUser});
+  MyMessageChatTile(
+      {this.message, required this.isCurrentUser, required this.deliveryTime});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -43,7 +45,7 @@ class MyMessageChatTile extends StatelessWidget {
                         children: <Widget>[
                           SizedBox(height: 5.w),
                           SelectableText(
-                            "${message!.messageBody}",
+                            "${message}",
                             minLines: 2,
                             maxLines: 6,
                             style: TextStyle(
@@ -62,7 +64,8 @@ class MyMessageChatTile extends StatelessWidget {
                     right: isCurrentUser ? 25.w : 0,
                   ),
                   child: Text(
-                    "23:12 AM",
+                    // "23:12 AM",
+                    deliveryTime,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.tertiary,
                       fontSize: 12.sp,

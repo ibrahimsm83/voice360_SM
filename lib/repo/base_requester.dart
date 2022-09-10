@@ -116,7 +116,7 @@ class BaseRequester {
   }
 
   Future basePostAPI(url, body,
-      {successMsg, loading, protected = false}) async {
+      {successMsg, loading, protected = false, bool jsonType = true}) async {
     protected ? await updateToken() : null;
 
     if (loading == true && loading != null) {
@@ -134,10 +134,91 @@ class BaseRequester {
     try {
       response = await http.post(Uri.parse(url),
           headers: protected
-              ? <String, String>{
+              ? jsonType == true
+                  ? <String, String>{
+                      'Content-Type': 'application/json; charset=UTF-8',
+                      'Authorization': bearerAuth
+                    }
+                  : <String, String>{'Authorization': bearerAuth}
+              : <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
-                  'Authorization': bearerAuth
-                }
+                },
+          body: (body));
+
+      _logRequestOnAlice(response);
+      // CustomLoader.dismisLoader();
+
+      var jsonData;
+      print(response.statusCode);
+      print(response.body);
+      if (response.statusCode == 200) {
+        jsonData = json.decode(response.body);
+        if (successMsg != null) {
+          CustomToast.showToast(successMsg, false);
+        }
+        if (jsonData['isSuccess'] == false) {
+          CustomToast.showToast(jsonData['message'], true);
+          return;
+        }
+        return jsonData;
+      } else if (response.statusCode == 400) {
+        jsonData = json.decode(response.body);
+        return jsonData;
+      } else if (response.statusCode == 401) {
+        if (protected == false) {
+          jsonData = json.decode(response.body);
+
+          return jsonData;
+        }
+        var tryRelogin = await _authRepo.reLoginUser();
+        if (tryRelogin.runtimeType == String) {
+          _authRepo.logoutUser();
+          Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
+          CustomToast.showToast("Session expired, Please login again", true);
+          return;
+        }
+        if (tryRelogin) {
+          final response = await basePostAPI(url, body, protected: protected);
+          return response;
+        }
+        // jsonData = json.decode(response.body);
+
+        // return jsonData;
+      } else {
+        throw Exception('Failed');
+      }
+    } catch (SocketException) {
+      print(SocketException);
+      // CustomLoader.dismisLoader();
+      return null;
+    }
+  }
+
+  Future basePatchAPI(url, body,
+      {successMsg, loading, protected = false, bool jsonType = true}) async {
+    protected ? await updateToken() : null;
+
+    if (loading == true && loading != null) {
+      // CustomLoader.showLoader();
+
+      // EasyLoading.show(status: 'Please wait...',indicator: Container(height: 100,width: 100,color: Colors.red,),);
+    }
+
+    String bearerAuth = 'Bearer $token';
+
+    http.Response response;
+    print(body);
+    print(url);
+
+    try {
+      response = await http.patch(Uri.parse(url),
+          headers: protected
+              ? jsonType == true
+                  ? <String, String>{
+                      'Content-Type': 'application/json; charset=UTF-8',
+                      'Authorization': bearerAuth
+                    }
+                  : <String, String>{'Authorization': bearerAuth}
               : <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
                 },
