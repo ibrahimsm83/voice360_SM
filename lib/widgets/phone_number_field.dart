@@ -15,11 +15,13 @@ class PhoneNumberField extends StatelessWidget {
   String? hint;
   TextEditingController? textController;
   Function? onChanged;
+  bool readOnly;
   PhoneNumberField({
     Key? key,
     this.hint,
     this.textController,
     this.onChanged,
+    this.readOnly = false,
   }) : super(key: key);
   Widget _buildDropdownItem(Country country) => Container(
         child: Row(
@@ -44,6 +46,7 @@ class PhoneNumberField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppTextFieldWPrefix(
+      isReadOnly: readOnly,
       textAlign: TextAlign.left,
       textController: textController,
       hint: hint,

@@ -194,7 +194,13 @@ class MessagesScreen extends StatelessWidget {
                                                 Row(
                                                   children: [
                                                     Text(
-                                                      "Mathew Murdock",
+                                                      con.threads[index]
+                                                          .participants!
+                                                          .where((element) =>
+                                                              element.isSelf !=
+                                                              true)
+                                                          .toList()[0]
+                                                          .number!, //"Mathew Murdock",
                                                       // style: ts(1, 0xff1B1A57, 14.sp, 5),
                                                       style: TextStyle(
                                                         fontWeight: con

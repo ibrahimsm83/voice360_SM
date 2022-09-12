@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:itp_voice/models/get_devices_reponse_model/devices.dart';
 import 'package:itp_voice/models/get_devices_reponse_model/get_devices_reponse_model.dart';
 import 'package:itp_voice/models/login_reponse_model/login_reponse_model.dart';
@@ -132,8 +133,11 @@ class AuthRepo {
   loginUser(String email, String password, bool rememberMe) async {
     LoginRequestModel body =
         LoginRequestModel(username: email, password: password);
-    final apiResponse = await BaseRequesterMethods.baseRequester
-        .basePostAPI(Endpoints.LOGIN_URL, body.toJson(), protected: false);
+    Map loginBody = body.toMap();
+    loginBody['mobile_device_id'] = await FirebaseMessaging.instance.getToken();
+    final apiResponse = await BaseRequesterMethods.baseRequester.basePostAPI(
+        Endpoints.LOGIN_URL, jsonEncode(loginBody),
+        protected: false);
     if (apiResponse != null) {
       try {
         if (apiResponse['errors']) {

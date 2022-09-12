@@ -28,7 +28,6 @@ class ContactsController extends GetxController {
     isContactsLoading = false;
 
     if (res.runtimeType == GetContactsReponseModel) {
-      print('================ERROR------------');
       GetContactsReponseModel model = res;
       if (model.contacts!.isNotEmpty) {
         for (int i = 0; i < Helpers.alphabet.length; i++) {

@@ -9,6 +9,7 @@ class UserProfile {
   bool? errors;
   String? message;
   dynamic pageSize;
+
   UserProfile({this.profile, this.errors, this.message, this.pageSize});
 
   @override

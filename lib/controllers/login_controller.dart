@@ -24,7 +24,10 @@ class LoginController extends GetxController {
       print("Logging in");
       CustomLoader.showLoader();
       var res = await _authRepo.loginUser(
-          emailController.text, passwordController.text, isRemember.value);
+        emailController.text,
+        passwordController.text,
+        isRemember.value,
+      );
       Get.back();
       if (res.runtimeType == String) {
         CustomToast.showToast(res.toString(), true);
