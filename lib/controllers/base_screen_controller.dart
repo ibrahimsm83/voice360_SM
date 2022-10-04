@@ -19,9 +19,9 @@ class BaseScreenController extends GetxController
   @override
   void onInit() {
     // TODO: implement onInit
-    helper = Get.find<SIPUAHelper>();
-    _bindEventListeners();
-    loadSettings();
+    //helper = Get.find<SIPUAHelper>();
+    //_bindEventListeners();
+    //loadSettings();
     super.onInit();
   }
 

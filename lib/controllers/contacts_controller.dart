@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:itp_voice/helpers/config.dart';
 import 'package:itp_voice/models/contact_list_data_model.dart';
+import 'package:itp_voice/models/get_contacts_reponse_model/contact_response.dart';
 import 'package:itp_voice/models/get_contacts_reponse_model/get_contacts_reponse_model.dart';
-import 'package:itp_voice/models/get_contacts_reponse_model/user_contact.dart';
 import 'package:itp_voice/repo/contacts_repo.dart';
 import 'package:itp_voice/routes.dart';
 import 'package:itp_voice/widgets/custom_loader.dart';
@@ -16,7 +16,7 @@ class ContactsController extends GetxController {
   bool isContactsLoading = false;
   ContactsRepo repo = ContactsRepo();
   Map<String, List<String>> filteredData = {};
-  List<UserContact> unfilteredData = [];
+  List<Contact> unfilteredData = [];
   List<AlphabetListViewItemGroup> contacts = [];
   TextEditingController searchController = TextEditingController();
 
@@ -27,19 +27,19 @@ class ContactsController extends GetxController {
     final res = await repo.getContacts();
     isContactsLoading = false;
 
-    if (res.runtimeType == GetContactsReponseModel) {
-      GetContactsReponseModel model = res;
-      if (model.contacts!.isNotEmpty) {
+    if (res.runtimeType == ContactResponse) {
+      ContactResponse model = res;
+      if (model.result!.isNotEmpty) {
         for (int i = 0; i < Helpers.alphabet.length; i++) {
           filteredData.putIfAbsent(Helpers.alphabet[i], () => [""]);
-          for (int j = 0; j < model.contacts!.length; j++) {
+          for (int j = 0; j < model.result!.length; j++) {
             if (Helpers.alphabet[i] ==
-                model.contacts![j].name![0].toLowerCase()) {
+                model.result![j].firstname![0].toLowerCase()) {
               filteredData[Helpers.alphabet[i]]!.add(
-                  model.contacts![j].name.toString() +
-                      model.contacts![j].pk.toString());
+                  model.result![j].firstname.toString() +
+                      model.result![j].pk.toString());
 
-              unfilteredData.add(model.contacts![j]);
+              unfilteredData.add(model.result![j]);
             }
           }
         }
@@ -72,7 +72,7 @@ class ContactsController extends GetxController {
     }
     if (searchController.text.isNotEmpty) {
       return unfilteredData
-          .where((element) => element.name!
+          .where((element) => element.firstname!
               .toLowerCase()
               .contains(searchController.text.toLowerCase()))
           .toList();

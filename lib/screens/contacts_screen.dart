@@ -277,7 +277,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                               TextBox(
                                                 text: con
                                                     .getDataList()[index]
-                                                    .name![0],
+                                                    .firstname![0],
                                               ),
                                               SizedBox(width: 15.w),
                                               Container(
@@ -294,7 +294,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                       Row(
                                                         children: [
                                                           Text(
-                                                            "${con.getDataList()[index].name!}",
+                                                            "${con.getDataList()[index].firstname!}",
                                                             // style: ts(1, 0xff1B1A57, 14.sp, 5),
                                                             maxLines: 2,
                                                             style: TextStyle(

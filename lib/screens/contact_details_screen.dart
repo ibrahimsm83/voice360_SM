@@ -7,11 +7,12 @@ import 'package:get/get.dart';
 import 'package:itp_voice/controllers/base_screen_controller.dart';
 import 'package:itp_voice/controllers/contacts_controller.dart';
 import 'package:itp_voice/models/contact_list_data_model.dart';
-import 'package:itp_voice/models/get_contacts_reponse_model/user_contact.dart';
 import 'package:itp_voice/routes.dart';
 import 'package:itp_voice/widgets/search_textfield.dart';
 import 'package:itp_voice/widgets/text_container.dart';
 import 'package:itp_voice/temp_data.dart' as repo;
+
+import '../models/get_contacts_reponse_model/contact_response.dart';
 
 class ContactDetailsScreen extends StatefulWidget {
   ContactDetailsScreen({
@@ -23,7 +24,7 @@ class ContactDetailsScreen extends StatefulWidget {
 }
 
 class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
-  UserContact? contact;
+  Contact? contact;
   BaseScreenController baseController = Get.find<BaseScreenController>();
   ContactsController con = Get.find<ContactsController>();
 
@@ -166,8 +167,8 @@ class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
                     Align(
                       alignment: Alignment.center,
                       child: TextBox(
-                        text: contact!.name![0].toUpperCase() +
-                            contact!.name![1].toUpperCase(),
+                        text: contact!.firstname![0].toUpperCase() +
+                            contact!.firstname![1].toUpperCase(),
                         height: 100.h,
                         width: 100.h,
                         singleCharFontSize: 30.sp,
@@ -180,7 +181,7 @@ class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        contact!.name!,
+                        contact!.firstname!,
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
@@ -195,12 +196,12 @@ class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
                       endIndent: 20.w,
                     ),
                     ListView.builder(
-                      itemCount: contact!.numbers!.length,
+                      itemCount: 1, //contact!.numbers!.length,
                       shrinkWrap: true,
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
                           title: Text(
-                            contact!.numbers![index].number!,
+                            contact!.phone ?? '',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 17.sp,
@@ -217,8 +218,7 @@ class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
                                 GestureDetector(
                                   onTap: () {
                                     baseController.handleCall(
-                                        contact!.numbers![index].number!,
-                                        context);
+                                        contact!.phone!, context);
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(7.h),

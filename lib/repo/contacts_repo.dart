@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:itp_voice/models/add_contact_request_model/add_contact_request_model.dart';
+import 'package:itp_voice/models/get_contacts_reponse_model/contact_response.dart';
 import 'package:itp_voice/models/get_contacts_reponse_model/get_contacts_reponse_model.dart';
 import 'package:itp_voice/repo/base_requester.dart';
 import 'package:itp_voice/repo/shares_preference_repo.dart';
@@ -10,13 +11,49 @@ import 'package:itp_voice/storage_keys.dart';
 class ContactsRepo {
   BaseRequester requester = BaseRequester();
 
-  createContact(AddContactRequestModel requestData) async {
+  createContact(String name, String notes, String phone, String email) async {
     try {
       String? apiId =
           await SharedPreferencesMethod.getString(StorageKeys.API_ID);
 
       final apiResponse = await requester.basePostAPI(
-          Endpoints.CREATE_CONTACT_URL(apiId), requestData.toJson(),
+          Endpoints.CREATE_CONTACT_URL(apiId),
+          jsonEncode({
+            'firstname': name,
+            'lastname': '',
+            'notes': notes,
+            'phone': phone,
+            'email': email
+          }),
+          protected: true);
+
+      if (apiResponse != null) {
+        if (apiResponse['errors']) {
+          return apiResponse['message'];
+        } else {
+          return true;
+        }
+      }
+    } catch (e) {
+      return "Something went wrong";
+    }
+  }
+
+  updateContact(
+      dynamic id, String name, String notes, String phone, String email) async {
+    try {
+      String? apiId =
+          await SharedPreferencesMethod.getString(StorageKeys.API_ID);
+
+      final apiResponse = await requester.basePatchAPI(
+          Endpoints.UPDATE_CONTACT_URL(apiId) + '/${id}',
+          jsonEncode({
+            'firstname': name,
+            'lastname': '',
+            'notes': notes,
+            'phone': phone,
+            'email': email
+          }),
           protected: true);
 
       if (apiResponse != null) {
@@ -39,9 +76,10 @@ class ContactsRepo {
         Endpoints.GET_CONTACTS_URL(apiId),
       );
 
-      if (!apiResponse['errors']) {
-        GetContactsReponseModel reponse =
-            GetContactsReponseModel.fromMap(apiResponse);
+      if (apiResponse['errors'] /*!apiResponse['errors']*/) {
+        ContactResponse reponse = ContactResponse.fromJson(apiResponse);
+        // GetContactsReponseModel reponse =
+        //     GetContactsReponseModel.fromMap(apiResponse);
         return reponse;
       }
       return "Something went wrong";

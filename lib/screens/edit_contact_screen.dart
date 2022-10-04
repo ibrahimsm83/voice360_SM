@@ -122,28 +122,31 @@ class EditContactScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            con.addNewContactField();
-                          },
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.add,
-                                size: 18.sp,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                              Text(
-                                "Add another",
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontSize: 14.sp,
-                                ),
-                              )
-                            ],
-                          ),
+                        const SizedBox(
+                          width: 1,
                         ),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     con.addNewContactField();
+                        //   },
+                        //   child: Row(
+                        //     mainAxisSize: MainAxisSize.min,
+                        //     children: [
+                        //       Icon(
+                        //         Icons.add,
+                        //         size: 18.sp,
+                        //         color: Theme.of(context).colorScheme.primary,
+                        //       ),
+                        //       Text(
+                        //         "Add another",
+                        //         style: TextStyle(
+                        //           color: Theme.of(context).colorScheme.primary,
+                        //           fontSize: 14.sp,
+                        //         ),
+                        //       )
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     ),
                     SizedBox(
@@ -314,28 +317,31 @@ class EditContactScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            con.addNewEmailField();
-                          },
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.add,
-                                size: 18.sp,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                              Text(
-                                "Add another",
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontSize: 14.sp,
-                                ),
-                              )
-                            ],
-                          ),
+                        const SizedBox(
+                          width: 1,
                         ),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     con.addNewEmailField();
+                        //   },
+                        //   child: Row(
+                        //     mainAxisSize: MainAxisSize.min,
+                        //     children: [
+                        //       Icon(
+                        //         Icons.add,
+                        //         size: 18.sp,
+                        //         color: Theme.of(context).colorScheme.primary,
+                        //       ),
+                        //       Text(
+                        //         "Add another",
+                        //         style: TextStyle(
+                        //           color: Theme.of(context).colorScheme.primary,
+                        //           fontSize: 14.sp,
+                        //         ),
+                        //       )
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     ),
                     SizedBox(

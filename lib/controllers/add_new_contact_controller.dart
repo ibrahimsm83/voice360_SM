@@ -116,7 +116,11 @@ class AddNewContactController extends GetxController {
       Get.focusScope!.unfocus();
       CustomLoader.showLoader();
       try {
-        var res = await contactsRepo.createContact(requestData);
+        var res = await contactsRepo.createContact(
+            fullNameController.text,
+            numbers[0].label ?? '',
+            numbers[0].number ?? '',
+            emails[0].email ?? '');
         Get.back();
         if (res.runtimeType == String) {
           CustomToast.showToast(res, true);

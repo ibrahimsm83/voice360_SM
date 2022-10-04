@@ -103,14 +103,22 @@ class Endpoints {
   }
 
   static String CREATE_CONTACT_URL(api_id) {
+    return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
+    return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/contacts";
+  }
+
+  static String UPDATE_CONTACT_URL(api_id) {
+    return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
     return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/contacts";
   }
 
   static String DELETE_CONTACT(api_id) {
+    return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
     return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/contacts";
   }
 
   static String GET_CONTACTS_URL(api_id) {
+    return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
     return Config.BASE_URL_ITP_VOICE +
         "${api_id}/my-extension/contacts?unlimit=true";
   }

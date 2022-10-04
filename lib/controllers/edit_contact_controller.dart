@@ -13,12 +13,14 @@ import 'package:itp_voice/widgets/custom_loader.dart';
 import 'package:itp_voice/widgets/custom_toast.dart';
 import 'package:itp_voice/widgets/phone_number_field.dart';
 
+import '../models/get_contacts_reponse_model/contact_response.dart';
+
 class EditContactController extends GetxController {
   RxInt phoneNumberCount = 1.obs;
   RxString selectedValues = "Option 1".obs;
   ContactsRepo contactsRepo = ContactsRepo();
   ContactsController contactsController = Get.find<ContactsController>();
-  UserContact? contact;
+  Contact? contact;
   List<String> options = [
     "Option 1",
     "Option 2",
@@ -39,7 +41,8 @@ class EditContactController extends GetxController {
   ];
   List<Map<String, dynamic>> contactFieldsData = [];
   List<Map<String, dynamic>> emailFieldsData = [];
-  TextEditingController fullNameController = TextEditingController();
+  TextEditingController get fullNameController =>
+      TextEditingController(text: contact!.firstname!);
 
   @override
   void onInit() {
@@ -51,17 +54,28 @@ class EditContactController extends GetxController {
   }
 
   addNewContactField() async {
-    for (int i = 0; i < contact!.numbers!.length; i++) {
-      contactFieldsData.add({
-        "labelOptions": contactsLabels,
-        "selectedLabel": contactsLabels.indexWhere((element) =>
-            element.toLowerCase() == contact!.numbers![i].label!.toLowerCase()),
-        "code": "92",
-        "controller": TextEditingController()
-      });
-      update();
-    }
+    contactFieldsData.add({
+      "labelOptions": contactsLabels,
+      "selectedLabel": contactsLabels.indexWhere(
+          (element) => element.toLowerCase() == contact!.notes!.toLowerCase()),
+      "code": "92",
+      "controller": TextEditingController()
+    });
+    update();
   }
+
+  // addNewContactField() async {
+  //   for (int i = 0; i < contact!.numbers!.length; i++) {
+  //     contactFieldsData.add({
+  //       "labelOptions": contactsLabels,
+  //       "selectedLabel": contactsLabels.indexWhere((element) =>
+  //           element.toLowerCase() == contact!.numbers![i].label!.toLowerCase()),
+  //       "code": "92",
+  //       "controller": TextEditingController()
+  //     });
+  //     update();
+  //   }
+  // }
 
   removeContactField(int index) async {
     contactFieldsData.removeAt(index);
@@ -72,10 +86,19 @@ class EditContactController extends GetxController {
     emailFieldsData.add({
       "labelOptions": emailLabels,
       "selectedLabel": 0,
-      "controller": TextEditingController()
+      "controller": TextEditingController(text: contact!.email!)
     });
     update();
   }
+
+  // addNewEmailField() async {
+  //   emailFieldsData.add({
+  //     "labelOptions": emailLabels,
+  //     "selectedLabel": 0,
+  //     "controller": TextEditingController()
+  //   });
+  //   update();
+  // }
 
   removeEmailField(int index) async {
     emailFieldsData.removeAt(index);
@@ -119,7 +142,12 @@ class EditContactController extends GetxController {
       Get.focusScope!.unfocus();
       CustomLoader.showLoader();
       try {
-        var res = await contactsRepo.createContact(requestData);
+        var res = await contactsRepo.updateContact(
+            contact!.pk,
+            fullNameController.text,
+            numbers[0].label ?? '',
+            numbers[0].number ?? '',
+            emails[0].email ?? '');
         Get.back();
         if (res.runtimeType == String) {
           CustomToast.showToast(res, true);
@@ -131,7 +159,7 @@ class EditContactController extends GetxController {
         }
         if (res) {
           Get.back();
-          CustomToast.showToast("New contact created successfully", false);
+          CustomToast.showToast("Contact updated successfully", false);
           contactsController.fetchContacts();
           return;
         }
