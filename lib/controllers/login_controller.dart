@@ -1,9 +1,13 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:itp_voice/app_theme.dart';
+import 'package:itp_voice/locator.dart';
 import 'package:itp_voice/repo/auth_repo.dart';
 import 'package:itp_voice/repo/shares_preference_repo.dart';
 import 'package:itp_voice/routes.dart';
+import 'package:itp_voice/services/numbers_service.dart';
 import 'package:itp_voice/storage_keys.dart';
 import 'package:itp_voice/widgets/custom_loader.dart';
 import 'package:itp_voice/widgets/custom_toast.dart';
@@ -39,6 +43,7 @@ class LoginController extends GetxController {
 
         return;
       } else {
+        await locator<NumbersService>().getUpdatedNumbersList();
         Get.offAllNamed(Routes.BASE_SCREEN_ROUTE);
       }
     }
@@ -73,12 +78,24 @@ class LoginController extends GetxController {
       if (token == null) {
         bool? remember = _prefs.getBool(StorageKeys.REMEMBER);
         if (remember != null && remember) {
-          emailController.text = _prefs.getString(StorageKeys.EMAIL)!;
-          passwordController.text = _prefs.getString(StorageKeys.PASSWORD)!;
+          // emailController.text = _prefs.getString(StorageKeys.EMAIL)!;
+          // passwordController.text = _prefs.getString(StorageKeys.PASSWORD)!;
         }
         showLogin.value = true;
       } else {
+        try {
+          await locator<NumbersService>().getUpdatedNumbersList();
+        } catch (e) {
+          showLogin.value = true;
+          return;
+        }
         Get.offAllNamed(Routes.BASE_SCREEN_ROUTE);
+      }
+      bool? isDark = SharedPreferencesMethod.storage.getBool(StorageKeys.DARK_THEME);
+      if (isDark == true) {
+        Get.changeThemeMode(ThemeMode.dark);
+      } else {
+        Get.changeThemeMode(ThemeMode.light);
       }
     });
   }

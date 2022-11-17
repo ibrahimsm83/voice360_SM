@@ -11,4 +11,7 @@ class StorageKeys {
   static String USER_ID = "user_id";
   static String EXTENTION = "extention";
   static String DEFAULT_NUMBER = "default_number";
+  static String CURRENT_CALL_NUMBER = "current_call_number";
+  static String CURRENT_CALL_NAME = "current_call_name";
+  static String DARK_THEME = "dark_theme";
 }

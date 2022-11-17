@@ -6,6 +6,7 @@ import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_dtmf/dtmf.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:itp_voice/app_theme.dart';
 
 class DialPad extends StatefulWidget {
   final ValueSetter<String>? makeCall;
@@ -22,6 +23,7 @@ class DialPad extends StatefulWidget {
   // outputMask is the mask applied to the output text. Defaults to (000) 000-0000
   final String? outputMask;
   final bool? enableDtmf;
+  final String? initialValue;
 
   DialPad(
       {this.makeCall,
@@ -35,6 +37,7 @@ class DialPad extends StatefulWidget {
       this.dialButtonIcon,
       this.dialOutputTextColor,
       this.backspaceButtonIconColor,
+      this.initialValue,
       this.enableDtmf});
 
   @override
@@ -44,26 +47,23 @@ class DialPad extends StatefulWidget {
 class _DialPadState extends State<DialPad> {
   MaskedTextController? textEditingController;
   var _value = "";
-  var mainTitle = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "＃"];
-  var subTitle = [
-    "",
-    "ABC",
-    "DEF",
-    "GHI",
-    "JKL",
-    "MNO",
-    "PQRS",
-    "TUV",
-    "WXYZ",
-    null,
-    "+",
-    null
-  ];
+  var mainTitle = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#"];
+  var subTitle = ["", "ABC", "DEF", "GHI", "JKL", "MNO", "PQRS", "TUV", "WXYZ", null, "+", null];
 
   @override
   void initState() {
     textEditingController = MaskedTextController(
-        mask: widget.outputMask != null ? widget.outputMask : '(000) 000-0000');
+        mask: widget.outputMask != null ? widget.outputMask : '(000) 000-0000',
+        translator: {"0": RegExp(r'[0123456789*#]')});
+    if (widget.initialValue != null) {
+      for (String letter in widget.initialValue!.split("")) {
+        if (letter == "+") {
+          null;
+        } else {
+          _setText(letter);
+        }
+      }
+    }
     super.initState();
   }
 
@@ -85,8 +85,7 @@ class _DialPadState extends State<DialPad> {
 
     for (var i = 0; i < mainTitle.length; i++) {
       if (i % 3 == 0 && i > 0) {
-        rows.add(Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: items));
+        rows.add(Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: items));
         rows.add(SizedBox(
           height: 12,
         ));
@@ -102,8 +101,7 @@ class _DialPadState extends State<DialPad> {
       ));
     }
     //To Do: Fix this workaround for last row
-    rows.add(
-        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: items));
+    rows.add(Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: items));
     rows.add(SizedBox(
       height: 12,
     ));
@@ -118,13 +116,16 @@ class _DialPadState extends State<DialPad> {
 
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           Padding(
             padding: EdgeInsets.all(20),
             child: TextFormField(
               readOnly: true,
               style: TextStyle(
-                  color: widget.dialOutputTextColor ?? Colors.black,
+                  color: AppTheme.colors(context)?.textColor
+                  // widget.dialOutputTextColor ?? Colors.black
+                  ,
                   fontSize: sizeFactor / 2),
               textAlign: TextAlign.center,
               decoration: InputDecoration(border: InputBorder.none),
@@ -177,10 +178,7 @@ class _DialPadState extends State<DialPad> {
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                               gradient: LinearGradient(colors: [
-                                Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.8),
+                                Theme.of(context).colorScheme.primary.withOpacity(0.8),
                                 Theme.of(context).colorScheme.primary,
                               ]),
                               shape: BoxShape.circle,
@@ -194,17 +192,14 @@ class _DialPadState extends State<DialPad> {
               ),
               Expanded(
                 child: Padding(
-                  padding:
-                      EdgeInsets.only(right: screenSize.height * 0.03685504),
+                  padding: EdgeInsets.only(right: screenSize.height * 0.03685504),
                   child: IconButton(
                     icon: Icon(
                       Icons.backspace,
                       size: sizeFactor / 2,
                       color: _value.length > 0
-                          ? (widget.backspaceButtonIconColor != null
-                              ? widget.backspaceButtonIconColor
-                              : Colors.white24)
-                          : Colors.white24,
+                          ? (widget.backspaceButtonIconColor != null ? widget.backspaceButtonIconColor : Colors.white24)
+                          : Theme.of(context).scaffoldBackgroundColor,
                     ),
                     onPressed: _value.length == 0
                         ? null
@@ -220,7 +215,8 @@ class _DialPadState extends State<DialPad> {
                 ),
               )
             ],
-          )
+          ),
+          const SizedBox(height: 40),
         ],
       ),
     );
@@ -252,19 +248,15 @@ class DialButton extends StatefulWidget {
   _DialButtonState createState() => _DialButtonState();
 }
 
-class _DialButtonState extends State<DialButton>
-    with SingleTickerProviderStateMixin {
+class _DialButtonState extends State<DialButton> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation _colorTween;
   Timer? _timer;
 
   @override
   void initState() {
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    _colorTween = ColorTween(
-            begin: widget.color != null ? widget.color : Colors.white24,
-            end: Colors.white)
+    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _colorTween = ColorTween(begin: widget.color != null ? widget.color : Colors.white24, end: Colors.white)
         .animate(_animationController);
 
     super.initState();
@@ -274,8 +266,7 @@ class _DialButtonState extends State<DialButton>
   void dispose() {
     _animationController.dispose();
     super.dispose();
-    if ((widget.shouldAnimate == null || widget.shouldAnimate!) &&
-        _timer != null) _timer!.cancel();
+    if ((widget.shouldAnimate == null || widget.shouldAnimate!) && _timer != null) _timer!.cancel();
   }
 
   @override
@@ -304,7 +295,7 @@ class _DialButtonState extends State<DialButton>
         child: AnimatedBuilder(
           animation: _colorTween,
           builder: (context, child) => Container(
-            color: Colors.grey.shade100,
+            color: Theme.of(context).extension<KAppColors>()?.buttonColor ?? Colors.white,
             height: 70.h,
             width: 70.h,
             padding: EdgeInsets.only(bottom: 10.h),
@@ -322,29 +313,26 @@ class _DialButtonState extends State<DialButton>
                                 style: TextStyle(
                                   fontSize: 26.sp,
                                   fontWeight: FontWeight.w500,
-                                  color: widget.textColor != null
-                                      ? widget.textColor
-                                      : Color(0xff4E4D4D),
+                                  color: AppTheme.colors(context)?.textColor,
+                                  // widget.textColor != null ? widget.textColor : Color(0xff4E4D4D),
                                 ),
                               ),
                               Text(widget.subtitle!,
                                   style: TextStyle(
-                                      fontSize: 10.sp,
-                                      color: widget.textColor != null
-                                          ? widget.textColor
-                                          : Color(0xff4E4D4D)))
+                                    fontSize: 10.sp,
+                                    color: AppTheme.colors(context)?.textColor,
+                                    // widget.textColor != null ? widget.textColor : Color(0xff4E4D4D),
+                                  ))
                             ],
                           )
                         : Padding(
-                            padding: EdgeInsets.only(
-                                top: widget.title == "*" ? 14 : 0),
+                            padding: EdgeInsets.only(top: widget.title == "*" ? 14 : 0),
                             child: Text(
                               widget.title!,
                               style: TextStyle(
-                                  fontSize: 32.sp,
-                                  color: widget.textColor != null
-                                      ? widget.textColor
-                                      : Colors.black),
+                                fontSize: 32.sp, color: AppTheme.colors(context)?.textColor,
+                                // widget.textColor != null ? widget.textColor : Colors.black,
+                              ),
                             ))
                     : Image.asset(
                         "assets/images/dial.png",

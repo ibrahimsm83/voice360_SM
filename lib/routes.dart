@@ -6,6 +6,7 @@ import 'package:itp_voice/screens/call_history_screen.dart';
 import 'package:itp_voice/screens/call_screen.dart';
 import 'package:itp_voice/screens/call_settings_screen.dart';
 import 'package:itp_voice/screens/change_password_screen.dart';
+import 'package:itp_voice/screens/chat_info_screen.dart';
 import 'package:itp_voice/screens/chat_screen.dart';
 import 'package:itp_voice/screens/contact_details_screen.dart';
 import 'package:itp_voice/screens/edit_contact_screen.dart';
@@ -24,15 +25,9 @@ class AppRoutes {
       name: Routes.LOGIN_SCREEN_ROUTE,
       page: () => LoginScreen(),
     ),
-    GetPage(
-        name: Routes.CONTACT_DETAIS_SCREEN_ROUTE,
-        page: () => ContactDetailsScreen()),
-    GetPage(
-        name: Routes.CALL_HISTORY_SCREEN_ROUTE,
-        page: () => CallHistoryScreen()),
-    GetPage(
-        name: Routes.VOICE_MAIL_DETAILS_ROUTE,
-        page: () => VoiceMailDetailsScreen()),
+    GetPage(name: Routes.CONTACT_DETAIS_SCREEN_ROUTE, page: () => ContactDetailsScreen()),
+    GetPage(name: Routes.CALL_HISTORY_SCREEN_ROUTE, page: () => CallHistoryScreen()),
+    GetPage(name: Routes.VOICE_MAIL_DETAILS_ROUTE, page: () => VoiceMailDetailsScreen()),
     GetPage(
       name: Routes.SETTINGS_SCREEN_ROUTE,
       page: () => SettingsScreen(),
@@ -69,6 +64,10 @@ class AppRoutes {
       name: Routes.EDIT_CONTACT_ROUTE,
       page: () => EditContactScreen(),
     ),
+    GetPage(
+      name: Routes.CHAT_DETAIL_ROUTE,
+      page: () => ChatInfoScreen(),
+    ),
   ];
 }
 
@@ -86,6 +85,7 @@ class Routes {
   static String CALL_SCREEN_ROUTE = '/call_screen_route';
   static String DIALPAD_SCREEN_ROUTE = '/dialpad_screen_route';
   static String EDIT_CONTACT_ROUTE = '/edit_contact_screen_route';
+  static String CHAT_DETAIL_ROUTE = '/chat_detail_screen_route';
 }
 
 class Endpoints {
@@ -104,38 +104,42 @@ class Endpoints {
 
   static String CREATE_CONTACT_URL(api_id) {
     return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
+    // return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
     return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/contacts";
   }
 
   static String UPDATE_CONTACT_URL(api_id) {
     return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
+    // return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
     return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/contacts";
   }
 
   static String DELETE_CONTACT(api_id) {
     return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
+    // return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
     return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/contacts";
   }
 
   static String GET_CONTACTS_URL(api_id) {
     return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
-    return Config.BASE_URL_ITP_VOICE +
-        "${api_id}/my-extension/contacts?unlimit=true";
+    // return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
+    return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/contacts?unlimit=true";
   }
 
   static String GET_VOICE_MAILS_URL(api_id) {
-    return Config.BASE_URL_ITP_VOICE +
-        "${api_id}/my-extension/voicemail-messages";
+    return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/voicemail-messages";
+  }
+
+  static String GET_CHAT_NUMBERS_URL(api_id) {
+    return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/chat/numbers";
   }
 
   static String DOWNLOAD_VOICE_MAIL_MESSAGES(api_id) {
-    return Config.BASE_URL_ITP_VOICE +
-        "${api_id}/my-extension/voicemail-messages";
+    return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/voicemail-messages";
   }
 
   static String DELETE_VOICE_MAIL_MESSAGE(api_id) {
-    return Config.BASE_URL_ITP_VOICE +
-        "${api_id}/my-extension/voicemail-messages";
+    return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/voicemail-messages";
   }
 
   static String GET_USER_DATA(api_id) {
@@ -143,8 +147,7 @@ class Endpoints {
   }
 
   static String GET_CALL_HISTORY(api_id) {
-    return Config.BASE_URL_ITP_VOICE +
-        "${api_id}/my-extension/cdr?paginate=true&page_size=10";
+    return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/cdr?paginate=true&page_size=10";
   }
 
   static String VALIDATE_PHONE_NUMBER(api_id) {
@@ -152,17 +155,14 @@ class Endpoints {
   }
 
   static String GET_MESSAGE_THREADS(api_id, number) {
-    return Config.BASE_URL_ITP_VOICE +
-        "${api_id}/my-extension/chat/sms/${number}";
+    return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/chat/sms/${number}";
   }
 
   static String GET_THREAD_MESSAGES(api_id, number, threadId) {
-    return Config.BASE_URL_ITP_VOICE +
-        "${api_id}/my-extension/chat/sms/${number}/$threadId";
+    return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/chat/sms/${number}/$threadId";
   }
 
   static String SEND_MESSAGE(api_id, number) {
-    return Config.BASE_URL_ITP_VOICE +
-        "${api_id}/my-extension/chat/sms/${number}";
+    return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/chat/sms/${number}";
   }
 }

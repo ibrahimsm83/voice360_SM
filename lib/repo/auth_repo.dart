@@ -131,21 +131,18 @@ class AuthRepo {
 ///////////
 
   loginUser(String email, String password, bool rememberMe) async {
-    LoginRequestModel body =
-        LoginRequestModel(username: email, password: password);
+    LoginRequestModel body = LoginRequestModel(username: email, password: password);
     Map loginBody = body.toMap();
     loginBody['mobile_device_id'] = await FirebaseMessaging.instance.getToken();
-    final apiResponse = await BaseRequesterMethods.baseRequester.basePostAPI(
-        Endpoints.LOGIN_URL, jsonEncode(loginBody),
-        protected: false);
+    final apiResponse = await BaseRequesterMethods.baseRequester
+        .basePostAPI(Endpoints.LOGIN_URL, jsonEncode(loginBody), protected: false);
     if (apiResponse != null) {
       try {
         if (apiResponse['errors']) {
           return apiResponse['message'];
         } else {
           LoginReponseModel response = LoginReponseModel.fromMap(apiResponse);
-          SharedPreferencesMethod.setString(
-              StorageKeys.REFRESH_TOKEN, response.result!.refreshToken);
+          SharedPreferencesMethod.setString(StorageKeys.REFRESH_TOKEN, response.result!.refreshToken);
           final devicesApiResponse = await getDevices();
           if (devicesApiResponse.runtimeType == String) {
             SharedPreferencesMethod.storage.remove(StorageKeys.REFRESH_TOKEN);
@@ -158,23 +155,19 @@ class AuthRepo {
               return userIdApiResponse;
             }
             if (userIdApiResponse) {
-              SharedPreferencesMethod.setString(
-                  StorageKeys.ACCESS_TOKEN, response.result!.accessToken);
+              SharedPreferencesMethod.setString(StorageKeys.ACCESS_TOKEN, response.result!.accessToken);
               SharedPreferencesMethod.setbool(StorageKeys.REMEMBER, rememberMe);
 
               if (rememberMe) {
                 SharedPreferencesMethod.setString(StorageKeys.EMAIL, email);
-                SharedPreferencesMethod.setString(
-                    StorageKeys.PASSWORD, password);
+                SharedPreferencesMethod.setString(StorageKeys.PASSWORD, password);
               } else {
                 SharedPreferencesMethod.storage.remove(StorageKeys.EMAIL);
                 SharedPreferencesMethod.storage.remove(StorageKeys.PASSWORD);
               }
 
-              SharedPreferencesMethod.setString(
-                  StorageKeys.REFRESH_TOKEN, response.result!.refreshToken);
-              SharedPreferencesMethod.setString(StorageKeys.APPUSER_DATA,
-                  json.encode(response.result!.toMap()));
+              SharedPreferencesMethod.setString(StorageKeys.REFRESH_TOKEN, response.result!.refreshToken);
+              SharedPreferencesMethod.setString(StorageKeys.APPUSER_DATA, json.encode(response.result!.toMap()));
               SharedPreferencesMethod.getUserData();
               return true;
               SharedPreferencesMethod.storage.remove(StorageKeys.REFRESH_TOKEN);
@@ -195,10 +188,9 @@ class AuthRepo {
   reLoginUser() async {
     String email = SharedPreferencesMethod.getString(StorageKeys.EMAIL)!;
     String password = SharedPreferencesMethod.getString(StorageKeys.PASSWORD)!;
-    LoginRequestModel body =
-        LoginRequestModel(username: email, password: password);
-    final apiResponse = await BaseRequesterMethods.baseRequester
-        .basePostAPI(Endpoints.LOGIN_URL, body.toJson(), protected: false);
+    LoginRequestModel body = LoginRequestModel(username: email, password: password);
+    final apiResponse =
+        await BaseRequesterMethods.baseRequester.basePostAPI(Endpoints.LOGIN_URL, body.toJson(), protected: false);
     if (apiResponse != null) {
       try {
         if (apiResponse['errors']) {
@@ -206,11 +198,9 @@ class AuthRepo {
         } else {
           LoginReponseModel response = LoginReponseModel.fromMap(apiResponse);
 
-          SharedPreferencesMethod.setString(
-              StorageKeys.REFRESH_TOKEN, response.result!.refreshToken);
+          SharedPreferencesMethod.setString(StorageKeys.REFRESH_TOKEN, response.result!.refreshToken);
 
-          SharedPreferencesMethod.setString(
-              StorageKeys.ACCESS_TOKEN, response.result!.accessToken);
+          SharedPreferencesMethod.setString(StorageKeys.ACCESS_TOKEN, response.result!.accessToken);
           return true;
           // final devicesApiResponse = await getDevices();
           // if (devicesApiResponse.runtimeType == String) {
@@ -251,11 +241,9 @@ class AuthRepo {
   getRealm() async {
     String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
 
-    final apiResponse = await BaseRequesterMethods.baseRequester
-        .baseGetAPI(Endpoints.GET_ACCOUNT_DETAILS(apiId));
+    final apiResponse = await BaseRequesterMethods.baseRequester.baseGetAPI(Endpoints.GET_ACCOUNT_DETAILS(apiId));
     if (!apiResponse['errors']) {
-      SharedPreferencesMethod.storage
-          .setString(StorageKeys.REALM, apiResponse['result']['realm']);
+      SharedPreferencesMethod.storage.setString(StorageKeys.REALM, apiResponse['result']['realm']);
       return true;
     } else {
       return apiResponse['message'];
@@ -264,20 +252,14 @@ class AuthRepo {
 
   getUserID() async {
     String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
-    final apiResponse = await BaseRequesterMethods.baseRequester
-        .baseGetAPI(Endpoints.GET_USER_DATA(apiId));
+    final apiResponse = await BaseRequesterMethods.baseRequester.baseGetAPI(Endpoints.GET_USER_DATA(apiId));
     if (apiResponse['message'] == "User details") {
-      SharedPreferencesMethod.storage.setString(
-          StorageKeys.USER_ID, apiResponse['result']['pk'].toString());
+      SharedPreferencesMethod.storage.setString(StorageKeys.USER_ID, apiResponse['result']['pk'].toString());
 
-      SharedPreferencesMethod.storage.setString(StorageKeys.EXTENTION,
-          apiResponse['result']['presence_id'].toString());
+      SharedPreferencesMethod.storage.setString(StorageKeys.EXTENTION, apiResponse['result']['presence_id'].toString());
 
-      SharedPreferencesMethod.storage.setString(
-          StorageKeys.DEFAULT_NUMBER,
-          apiResponse['result']['voice_account']
-                  ['default_outbound_callerid_number']
-              .toString());
+      SharedPreferencesMethod.storage.setString(StorageKeys.DEFAULT_NUMBER,
+          apiResponse['result']['voice_account']['default_outbound_callerid_number'].toString());
       print("USER ID : ${apiResponse['result']['pk']}");
       return true;
     } else {
@@ -286,23 +268,19 @@ class AuthRepo {
   }
 
   getServices() async {
-    final apiResponse = await BaseRequesterMethods.baseRequester
-        .baseGetAPI(Endpoints.SERVICES_URL);
+    final apiResponse = await BaseRequesterMethods.baseRequester.baseGetAPI(Endpoints.SERVICES_URL);
     if (!apiResponse['errors']) {
       // try {} catch (e) {}
-      ServicesResponseModel response =
-          ServicesResponseModel.fromMap(apiResponse);
+      ServicesResponseModel response = ServicesResponseModel.fromMap(apiResponse);
       try {
         // for(int i =0;i<response.message
-        List<Services> itpVoiceServices = response.services!
-            .where((element) => element.product!.itemType == "itp_voice")
-            .toList();
+        List<Services> itpVoiceServices =
+            response.services!.where((element) => element.product!.itemType == "itp_voice").toList();
         if (itpVoiceServices.length > 1) {
           return itpVoiceServices;
         }
         if (itpVoiceServices.length == 1) {
-          SharedPreferencesMethod.storage.setString(
-              StorageKeys.API_ID, itpVoiceServices[0].apiId.toString());
+          SharedPreferencesMethod.storage.setString(StorageKeys.API_ID, itpVoiceServices[0].apiId.toString());
           return true;
         }
       } catch (e) {
@@ -324,14 +302,11 @@ class AuthRepo {
       if (realmApiResponse.runtimeType == String) {
         return realmApiResponse;
       } else {
-        String? apiId =
-            await SharedPreferencesMethod.getString(StorageKeys.API_ID);
+        String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
 
-        final apiResponse = await BaseRequesterMethods.baseRequester
-            .baseGetAPI(Endpoints.GET_DEVICES_URL(apiId));
+        final apiResponse = await BaseRequesterMethods.baseRequester.baseGetAPI(Endpoints.GET_DEVICES_URL(apiId));
         if (!apiResponse['errors']) {
-          GetDevicesReponseModel response =
-              GetDevicesReponseModel.fromMap(apiResponse);
+          GetDevicesReponseModel response = GetDevicesReponseModel.fromMap(apiResponse);
           try {
             Devices appPhone = response.devices!.firstWhere(
               (element) => element.deviceType == "app_phone",
@@ -365,5 +340,31 @@ class AuthRepo {
     } else {
       return apiResponse['message'];
     }
+  }
+
+  Future<List<String>> getChatNumbers() async {
+    List<String> numbers = <String>[];
+    String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
+    if (apiId != null) {
+      try {
+        final apiResponse = await BaseRequesterMethods.baseRequester.baseGetAPI(Endpoints.GET_CHAT_NUMBERS_URL(apiId));
+        if (apiResponse.runtimeType == 1.runtimeType) {
+          throw (401);
+        }
+        if (!apiResponse['errors']) {
+          for (var numberData in apiResponse["result"]) {
+            numbers.add(numberData["number"]);
+          }
+        }
+      } catch (e) {
+        if (e.toString() == "401") {
+          throw ("401");
+        }
+        null;
+      }
+    }
+    print("NUMBERS: $numbers");
+
+    return numbers;
   }
 }

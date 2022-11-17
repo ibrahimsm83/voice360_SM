@@ -9,16 +9,15 @@ import 'package:itp_voice/routes.dart';
 import 'package:itp_voice/storage_keys.dart';
 
 class MessagesRepo {
-  getMessageThreads() async {
+  getMessageThreads(String myNumber) async {
     String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
     try {
-      String number = '+13053170959';
+      String number = myNumber;
       final apiResponse = await BaseRequesterMethods.baseRequester.baseGetAPI(
         Endpoints.GET_MESSAGE_THREADS(apiId, number),
       );
       if (!apiResponse['errors']) {
-        GetMessageThreadsResponseModel response =
-            GetMessageThreadsResponseModel.fromJson(apiResponse);
+        GetMessageThreadsResponseModel response = GetMessageThreadsResponseModel.fromJson(apiResponse);
         return response;
       }
       return "Something went wrong";
@@ -28,16 +27,15 @@ class MessagesRepo {
     }
   }
 
-  getThreadMessages(String threadId) async {
+  getThreadMessages(String threadId, String myNumber) async {
     String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
     try {
-      String number = '+13053170959';
+      String number = myNumber;
       final apiResponse = await BaseRequesterMethods.baseRequester.baseGetAPI(
         Endpoints.GET_THREAD_MESSAGES(apiId, number, threadId),
       );
       if (!apiResponse['errors']) {
-        GetThreadMessagesResponseModel response =
-            GetThreadMessagesResponseModel.fromJson(apiResponse);
+        GetThreadMessagesResponseModel response = GetThreadMessagesResponseModel.fromJson(apiResponse);
         return response;
       }
       return "Something went wrong";
@@ -47,21 +45,35 @@ class MessagesRepo {
     }
   }
 
-  sendMessage(String myNumber, String body, List to) async {
+  Future<Messages?> sendMessage(String myNumber, String body, String to, [String? image]) async {
     String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
     try {
-      final apiResponse = await BaseRequesterMethods.baseRequester.basePostAPI(
-        Endpoints.SEND_MESSAGE(apiId, myNumber),
-        jsonEncode({
-          "body": body,
-          "from_number": myNumber,
-          "to_numbers_list": {"list": to}
-        }),
-        protected: true,
-      );
+      // {
+      //     "body": body,
+      //     "from_number": myNumber,
+      //     "to_numbers_list": "{\"list\": [\"+13052990233\"]}"
+      //   }
+      Dio dio = Dio();
+      print(body);
+      Map<String, dynamic> data = {
+        "body": body,
+        "from_number": myNumber,
+        "to_numbers_list": to,
+      };
+      print(to);
+      if (image != null) {
+        data["file"] = await MultipartFile.fromFile(image);
+      }
+      final resp = await BaseRequesterMethods.baseRequester
+          .basePostAPI(Endpoints.SEND_MESSAGE(apiId, myNumber), data, useDio: true);
+      print(resp);
+      return Messages.fromJson(resp["result"]);
     } catch (e) {
+      if (e is DioError) {
+        print(e.response);
+      }
       print(e.toString());
-      return "Something went wrong";
+      return null;
     }
   }
 }

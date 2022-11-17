@@ -4,6 +4,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:itp_voice/app_theme.dart';
 import 'package:itp_voice/controllers/add_new_contact_controller.dart';
 import 'package:itp_voice/controllers/contacts_controller.dart';
 import 'package:itp_voice/controllers/edit_contact_controller.dart';
@@ -29,7 +30,7 @@ class EditContactScreen extends StatelessWidget {
             onTap: () {
               Get.back();
             },
-            child: Icon(Icons.arrow_back_ios, color: Colors.black, size: 18.sp),
+            child: Icon(Icons.arrow_back_ios, color: AppTheme.colors(context)?.textColor, size: 18.sp),
           ),
         ),
         elevation: 0,
@@ -71,7 +72,7 @@ class EditContactScreen extends StatelessWidget {
                           TextSpan(
                             text: "Full Name",
                             style: TextStyle(
-                              color: Colors.black,
+                              color: AppTheme.colors(context)?.textColor,
                               fontSize: 17.sp,
                               fontWeight: FontWeight.w500,
                             ),
@@ -106,7 +107,7 @@ class EditContactScreen extends StatelessWidget {
                               TextSpan(
                                 text: "Phone Number",
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: AppTheme.colors(context)?.textColor,
                                   fontSize: 17.sp,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -171,13 +172,10 @@ class EditContactScreen extends StatelessWidget {
                                   Stack(
                                     children: [
                                       PhoneNumberField(
-                                        textController:
-                                            value.contactFieldsData[index]
-                                                ['controller'],
+                                        textController: value.contactFieldsData[index]['controller'],
                                         hint: "xxx xxxxxxxx",
                                         onChanged: (val) {
-                                          value.contactFieldsData[index]
-                                              ['code'] = val;
+                                          value.contactFieldsData[index]['code'] = val;
                                           // print("Vaule " + value);
                                         },
                                       ),
@@ -187,16 +185,13 @@ class EditContactScreen extends StatelessWidget {
                                               right: 0,
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  value.removeContactField(
-                                                      index);
+                                                  value.removeContactField(index);
                                                 },
                                                 child: Container(
                                                   padding: EdgeInsets.all(2.h),
                                                   decoration: BoxDecoration(
                                                     shape: BoxShape.circle,
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .primary,
+                                                    color: Theme.of(context).colorScheme.primary,
                                                   ),
                                                   child: Icon(
                                                     Icons.close,
@@ -211,8 +206,7 @@ class EditContactScreen extends StatelessWidget {
                                   Container(
                                     // height: 30.h,
                                     child: ChipsChoice<int>.single(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 0.h),
+                                      padding: EdgeInsets.symmetric(vertical: 0.h),
                                       choiceActiveStyle: C2ChoiceStyle(
                                         borderWidth: 0,
                                         showCheckmark: false,
@@ -223,9 +217,7 @@ class EditContactScreen extends StatelessWidget {
                                         margin: EdgeInsets.zero,
                                         labelStyle: TextStyle(
                                           fontSize: 14.sp,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
+                                          color: Theme.of(context).colorScheme.primary,
                                         ),
                                         borderColor: Colors.transparent,
                                         color: Colors.white,
@@ -234,8 +226,7 @@ class EditContactScreen extends StatelessWidget {
                                           vertical: 0.002,
                                         ),
                                         backgroundColor: Colors.transparent,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(500)),
+                                        borderRadius: BorderRadius.all(Radius.circular(500)),
                                       ),
                                       alignment: WrapAlignment.start,
                                       choiceStyle: C2ChoiceStyle(
@@ -245,37 +236,27 @@ class EditContactScreen extends StatelessWidget {
                                           horizontal: 10.w,
                                           vertical: 0.001,
                                         ),
-                                        labelStyle: TextStyle(
-                                            fontSize: 14.sp,
-                                            color: Colors.black),
+                                        labelStyle:
+                                            TextStyle(fontSize: 14.sp, color: AppTheme.colors(context)?.textColor),
                                         borderColor: Colors.transparent,
                                         color: Colors.white,
                                         padding: EdgeInsets.symmetric(
                                           horizontal: 2.w,
                                           vertical: 0.002,
                                         ),
-                                        backgroundColor: Theme.of(context)
-                                            .colorScheme
-                                            .tertiary
-                                            .withOpacity(0),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(500)),
+                                        backgroundColor: Theme.of(context).colorScheme.tertiary.withOpacity(0),
+                                        borderRadius: BorderRadius.all(Radius.circular(500)),
                                       ),
                                       wrapped: true,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.max,
-                                      value: value.contactFieldsData[index]
-                                          ['selectedLabel'],
+                                      value: value.contactFieldsData[index]['selectedLabel'],
                                       onChanged: (val) {
-                                        value.contactFieldsData[index]
-                                            ['selectedLabel'] = val;
+                                        value.contactFieldsData[index]['selectedLabel'] = val;
                                         value.update();
                                       },
-                                      choiceItems:
-                                          C2Choice.listFrom<int, String>(
-                                        source: value.contactFieldsData[index]
-                                            ['labelOptions'],
+                                      choiceItems: C2Choice.listFrom<int, String>(
+                                        source: value.contactFieldsData[index]['labelOptions'],
                                         value: (i, v) => i,
                                         label: (i, v) => v,
                                       ),
@@ -301,7 +282,7 @@ class EditContactScreen extends StatelessWidget {
                               TextSpan(
                                 text: "Email",
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  color: AppTheme.colors(context)?.textColor,
                                   fontSize: 17.sp,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -367,9 +348,7 @@ class EditContactScreen extends StatelessWidget {
                                     children: [
                                       AppTextField(
                                         hint: "john@abc.com",
-                                        textController:
-                                            value.emailFieldsData[index]
-                                                ['controller'],
+                                        textController: value.emailFieldsData[index]['controller'],
                                       ),
                                       index == 0
                                           ? Container()
@@ -383,9 +362,7 @@ class EditContactScreen extends StatelessWidget {
                                                   padding: EdgeInsets.all(2.h),
                                                   decoration: BoxDecoration(
                                                     shape: BoxShape.circle,
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .primary,
+                                                    color: Theme.of(context).colorScheme.primary,
                                                   ),
                                                   child: Icon(
                                                     Icons.close,
@@ -400,8 +377,7 @@ class EditContactScreen extends StatelessWidget {
                                   Container(
                                     // height: 30.h,
                                     child: ChipsChoice<int>.single(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 0.h),
+                                      padding: EdgeInsets.symmetric(vertical: 0.h),
                                       choiceActiveStyle: C2ChoiceStyle(
                                         borderWidth: 0,
                                         showCheckmark: false,
@@ -412,9 +388,7 @@ class EditContactScreen extends StatelessWidget {
                                         margin: EdgeInsets.zero,
                                         labelStyle: TextStyle(
                                           fontSize: 14.sp,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
+                                          color: Theme.of(context).colorScheme.primary,
                                         ),
                                         borderColor: Colors.transparent,
                                         color: Colors.white,
@@ -423,8 +397,7 @@ class EditContactScreen extends StatelessWidget {
                                           vertical: 0.002,
                                         ),
                                         backgroundColor: Colors.transparent,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(500)),
+                                        borderRadius: BorderRadius.all(Radius.circular(500)),
                                       ),
                                       alignment: WrapAlignment.start,
                                       choiceStyle: C2ChoiceStyle(
@@ -434,37 +407,27 @@ class EditContactScreen extends StatelessWidget {
                                           horizontal: 10.w,
                                           vertical: 0.001,
                                         ),
-                                        labelStyle: TextStyle(
-                                            fontSize: 14.sp,
-                                            color: Colors.black),
+                                        labelStyle:
+                                            TextStyle(fontSize: 14.sp, color: AppTheme.colors(context)?.textColor),
                                         borderColor: Colors.transparent,
                                         color: Colors.white,
                                         padding: EdgeInsets.symmetric(
                                           horizontal: 2.w,
                                           vertical: 0.002,
                                         ),
-                                        backgroundColor: Theme.of(context)
-                                            .colorScheme
-                                            .tertiary
-                                            .withOpacity(0),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(500)),
+                                        backgroundColor: Theme.of(context).colorScheme.tertiary.withOpacity(0),
+                                        borderRadius: BorderRadius.all(Radius.circular(500)),
                                       ),
                                       wrapped: true,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.max,
-                                      value: value.emailFieldsData[index]
-                                          ['selectedLabel'],
+                                      value: value.emailFieldsData[index]['selectedLabel'],
                                       onChanged: (val) {
-                                        value.emailFieldsData[index]
-                                            ['selectedLabel'] = val;
+                                        value.emailFieldsData[index]['selectedLabel'] = val;
                                         value.update();
                                       },
-                                      choiceItems:
-                                          C2Choice.listFrom<int, String>(
-                                        source: value.emailFieldsData[index]
-                                            ['labelOptions'],
+                                      choiceItems: C2Choice.listFrom<int, String>(
+                                        source: value.emailFieldsData[index]['labelOptions'],
                                         value: (i, v) => i,
                                         label: (i, v) => v,
                                       ),

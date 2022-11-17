@@ -4,6 +4,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:itp_voice/app_theme.dart';
 import 'package:itp_voice/controllers/voicemails_controller.dart';
 import 'package:itp_voice/models/get_voice_mails_response_model/result.dart';
 import 'package:itp_voice/routes.dart';
@@ -65,9 +66,7 @@ class VoiceMailDetailsScreen extends StatelessWidget {
                                 style: TextStyle(
                                     fontSize: 18.sp,
                                     fontWeight: FontWeight.bold,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary),
+                                    color: Theme.of(context).colorScheme.secondary),
                               ),
                             ),
                             SizedBox(
@@ -82,11 +81,7 @@ class VoiceMailDetailsScreen extends StatelessWidget {
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   "Delete",
-                                  style: TextStyle(
-                                      fontSize: 18.sp,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary),
+                                  style: TextStyle(fontSize: 18.sp, color: Theme.of(context).colorScheme.secondary),
                                 ),
                               ),
                             ),
@@ -101,11 +96,7 @@ class VoiceMailDetailsScreen extends StatelessWidget {
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   "Download",
-                                  style: TextStyle(
-                                      fontSize: 18.sp,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary),
+                                  style: TextStyle(fontSize: 18.sp, color: Theme.of(context).colorScheme.secondary),
                                 ),
                               ),
                             )
@@ -116,8 +107,7 @@ class VoiceMailDetailsScreen extends StatelessWidget {
                   },
                   child: Container(
                     margin: EdgeInsets.only(right: 20.w, top: 10.h),
-                    child: Icon(Icons.more_vert,
-                        color: Color(0xff6B6F80), size: 22.sp),
+                    child: Icon(Icons.more_vert, color: Color(0xff6B6F80), size: 22.sp),
                   ),
                 )
               ],
@@ -127,8 +117,7 @@ class VoiceMailDetailsScreen extends StatelessWidget {
                     onTap: () {
                       Get.back();
                     },
-                    child: Icon(Icons.arrow_back_ios,
-                        color: Colors.black, size: 18.sp)),
+                    child: Icon(Icons.arrow_back_ios, color: AppTheme.colors(context)?.textColor, size: 18.sp)),
               ),
               elevation: 0,
               backgroundColor: Colors.transparent,
@@ -156,8 +145,7 @@ class VoiceMailDetailsScreen extends StatelessWidget {
                     height: 15.h,
                   ),
                   Container(
-                    margin:
-                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                    margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
                     alignment: Alignment.center,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,8 +154,7 @@ class VoiceMailDetailsScreen extends StatelessWidget {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             TextBox(
-                              text:
-                                  "${voicemail.callerid!.split("<")[0].replaceAll('"', "")[0]}",
+                              text: "${voicemail.callerid!.split("<")[0].replaceAll('"', "")[0]}",
                             ),
                             SizedBox(width: 15.w),
                             Container(
@@ -195,15 +182,10 @@ class VoiceMailDetailsScreen extends StatelessWidget {
                                     Container(
                                       width: 215.w,
                                       child: Text(
-                                        voicemail.usertime!.split(" ")[0] +
-                                            " | " +
-                                            voicemail.usertime!.split(" ")[1],
+                                        voicemail.usertime!.split(" ")[0] + " | " + voicemail.usertime!.split(" ")[1],
                                         // style: ts(1, 0xff4F5E7B, 12.sp, 4),
-                                        style: TextStyle(
-                                            fontSize: 13.sp,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .tertiary),
+                                        style:
+                                            TextStyle(fontSize: 13.sp, color: Theme.of(context).colorScheme.tertiary),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                       ),

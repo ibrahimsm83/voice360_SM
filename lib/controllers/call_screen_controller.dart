@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart' as flwebrtc;
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:itp_voice/routes.dart';
+import 'package:proximity_sensor/proximity_sensor.dart';
 import 'package:sip_ua/sip_ua.dart';
 import 'dart:async';
 
@@ -13,8 +15,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:sip_ua/sip_ua.dart';
 
-class CallScreenController extends GetxController
-    implements SipUaHelperListener {
+import '../main.dart';
+import '../widgets/custom_toast.dart';
+
+class CallScreenController extends GetxController implements SipUaHelperListener {
   RxBool showNumpad = false.obs;
   RxBool audioMuted = false.obs;
   RxBool videoMuted = false.obs;
@@ -36,8 +40,19 @@ class CallScreenController extends GetxController
   SIPUAHelper? helper;
   Call? call;
 
+  late StreamSubscription proximityStream;
+  RxBool isNear = false.obs;
+
   @override
-  void onInit() {
+  void onClose() {
+    // TODO: implement onClose
+    localStream?.dispose();
+    timer?.cancel();
+    super.onClose();
+  }
+
+  @override
+  void onInit() async {
     // TODO: implement onInit
     call = Get.arguments;
     if (call!.direction == "INCOMING") {
@@ -46,7 +61,14 @@ class CallScreenController extends GetxController
     }
     helper = Get.find<SIPUAHelper>();
     helper!.addSipUaHelperListener(this);
-    startTimer();
+    // startTimer();
+    proximityStream = ProximitySensor.events.listen((event) {
+      isNear.value = (event > 0) ? true : false;
+    });
+    await AudioService.init(
+      builder: () => MyAudioHandler(controller: this),
+      config: AudioServiceConfig(),
+    );
 
     super.onInit();
   }
@@ -81,8 +103,7 @@ class CallScreenController extends GetxController
 
   @override
   void callStateChanged(Call call, CallState callState) {
-    if (callState.state == CallStateEnum.HOLD ||
-        callState.state == CallStateEnum.UNHOLD) {
+    if (callState.state == CallStateEnum.HOLD || callState.state == CallStateEnum.UNHOLD) {
       hold.value = callState.state == CallStateEnum.HOLD;
       holdOriginator!.value = callState.originator!;
       // this.setState(() {});
@@ -106,6 +127,12 @@ class CallScreenController extends GetxController
     if (callState.state != CallStateEnum.STREAM) {
       state.value = callState.state;
     }
+
+    if (callState.state == CallStateEnum.FAILED) {
+      // Navigator.pushNamed(context, '/callscreen', arguments: call);
+
+      Get.back();
+    }
     print("Session Start Time" + call.session.start_time.toString());
     if (call.session.start_time != null) {
       startTimer();
@@ -116,6 +143,9 @@ class CallScreenController extends GetxController
         handelStreams(callState);
         break;
       case CallStateEnum.ENDED:
+        // if (Get.currentRoute == Routes.CALL_SCREEN_ROUTE) {
+        //   Get.back();
+        // }
         Get.back();
         break;
       case CallStateEnum.FAILED:
@@ -200,29 +230,31 @@ class CallScreenController extends GetxController
     // }
   }
 
+  void turnOffSpeaker() {
+    // if (localStream != null) {
+    speakerOn.value = false;
+    if (!kIsWeb) {
+      localStream!.getAudioTracks()[0].enableSpeakerphone(speakerOn.value);
+    }
+    // }
+  }
+
   void handleAccept() async {
     bool remote_has_video = call!.remote_has_video;
-    final mediaConstraints = <String, dynamic>{
-      'audio': true,
-      'video': remote_has_video
-    };
+    final mediaConstraints = <String, dynamic>{'audio': true, 'video': remote_has_video};
     MediaStream mediaStream;
 
     if (kIsWeb && remote_has_video) {
-      mediaStream = await flwebrtc.navigator.mediaDevices
-          .getDisplayMedia(mediaConstraints);
+      mediaStream = await flwebrtc.navigator.mediaDevices.getDisplayMedia(mediaConstraints);
       mediaConstraints['video'] = false;
-      MediaStream userStream =
-          await flwebrtc.navigator.mediaDevices.getUserMedia(mediaConstraints);
+      MediaStream userStream = await flwebrtc.navigator.mediaDevices.getUserMedia(mediaConstraints);
       mediaStream.addTrack(userStream.getAudioTracks()[0], addToNative: true);
     } else {
       mediaConstraints['video'] = remote_has_video;
-      mediaStream =
-          await flwebrtc.navigator.mediaDevices.getUserMedia(mediaConstraints);
+      mediaStream = await flwebrtc.navigator.mediaDevices.getUserMedia(mediaConstraints);
     }
 
-    call!.answer(helper!.buildCallOptions(!remote_has_video),
-        mediaStream: mediaStream);
+    call!.answer(helper!.buildCallOptions(!remote_has_video), mediaStream: mediaStream);
     isIncomingCallAccepted!.value = true;
   }
 
@@ -266,6 +298,33 @@ class CallScreenController extends GetxController
     }
     if (state.value == CallStateEnum.CONFIRMED) {
       return "Ringing";
+    }
+  }
+}
+
+class MyAudioHandler extends BaseAudioHandler
+    with
+        QueueHandler, // mix in default queue callback implementations
+        SeekHandler {
+  // mix in default seek callback implementations
+  CallScreenController controller;
+  MyAudioHandler({required this.controller});
+  // The most common callbacks:
+  Future<void> play() async {
+    if (controller.state.value == CallStateEnum.CONNECTING && controller.call!.direction == 'INCOMING') {
+      try {
+        controller.handleAccept();
+      } catch (e) {
+        CustomToast.showToast(e.toString(), true);
+      }
+    }
+  }
+
+  Future<void> stop() async {
+    try {
+      controller.handleHangup();
+    } catch (e) {
+      CustomToast.showToast(e.toString(), true);
     }
   }
 }

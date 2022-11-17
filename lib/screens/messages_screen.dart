@@ -3,6 +3,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:itp_voice/app_theme.dart';
 import 'package:itp_voice/controllers/messages_controller.dart';
 import 'package:itp_voice/routes.dart';
 import 'package:itp_voice/widgets/search_textfield.dart';
@@ -38,7 +39,9 @@ class MessagesScreen extends StatelessWidget {
                 height: 50.h,
                 width: 50.h,
                 child: FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    con.sendNewMessage(context);
+                  },
                   child: Container(
                     height: 50.h,
                     width: 50.h,
@@ -88,13 +91,57 @@ class MessagesScreen extends StatelessWidget {
                     SizedBox(
                       height: 15.h,
                     ),
-                    Searchbar(),
+                    Searchbar(
+                      controller: con.searchController,
+                      onChanged: (text) {
+                        con.filterThreads();
+                      },
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "My Number",
+                            style: TextStyle(fontSize: 17),
+                          ),
+                          Spacer(),
+                          DropdownButton<String>(
+                            value: con.selectedNumber,
+                            hint: const Text('-'),
+                            items: List.generate(
+                              con.numbers.length,
+                              (index) => DropdownMenuItem(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Text(
+                                    con.numbers[index],
+                                  ),
+                                ),
+                                value: con.numbers[index],
+                              ),
+                            ),
+                            onChanged: (text) {
+                              con.selectedNumber = text;
+                              con.loadThreads();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                     SizedBox(
                       height: 10.h,
                     ),
                     Container(
                       height: MediaQuery.of(context).size.height * 0.71,
                       child: ListView.separated(
+                          primary: false,
                           separatorBuilder: (context, index) {
                             return Divider();
                           },
@@ -103,17 +150,19 @@ class MessagesScreen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () {
-                                Get.toNamed(Routes.CHAT_SCREEN_ROUTE,
-                                    arguments: con.threads[index]
-                                        .participants![0].messageThreadId);
+                                Get.toNamed(Routes.CHAT_SCREEN_ROUTE, arguments: [
+                                  con.threads[index].participants![0].messageThreadId,
+                                  con.selectedNumber,
+                                  con.threads[index].participants
+                                      ?.firstWhere((participant) => participant.isSelf == false)
+                                      .number,
+                                ]);
                               },
                               child: Container(
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: 10.w, vertical: 5.h),
+                                margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                                 alignment: Alignment.center,
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
                                       mainAxisSize: MainAxisSize.max,
@@ -125,14 +174,13 @@ class MessagesScreen extends StatelessWidget {
                                               padding: EdgeInsets.all(2.h),
                                               alignment: Alignment.topCenter,
                                               decoration: BoxDecoration(
+                                                color: Colors.grey,
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: Colors.black
-                                                        .withOpacity(0.1),
+                                                    color: Colors.black.withOpacity(0.1),
                                                     spreadRadius: 2,
                                                     blurRadius: 4,
-                                                    offset: Offset(0,
-                                                        3), // changes position of shadow
+                                                    offset: Offset(0, 3), // changes position of shadow
                                                   ),
                                                 ],
                                                 shape: BoxShape.circle,
@@ -141,73 +189,59 @@ class MessagesScreen extends StatelessWidget {
                                                 height: 50.h,
                                                 width: 50.w,
                                                 decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.all(
+                                                  borderRadius: BorderRadius.all(
                                                     Radius.circular(
                                                       6,
                                                     ),
                                                   ),
-                                                  image: DecorationImage(
-                                                    image: NetworkImage(
-                                                        avatarImages[index]),
-                                                    fit: BoxFit.cover,
-                                                  ),
+                                                  // image: DecorationImage(
+                                                  //   image: AssetImage('assets/images/profile.png'),
+                                                  //   fit: BoxFit.cover,
+                                                  // ),
+                                                ),
+                                                child: Icon(
+                                                  Icons.person,
+                                                  size: 30,
                                                 ),
                                               ),
                                             ),
-                                            index == 0
-                                                ? Positioned(
-                                                    bottom: 0,
-                                                    right: 0,
-                                                    child: Container(
-                                                      padding:
-                                                          EdgeInsets.all(4.h),
-                                                      decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                            color:
-                                                                Colors.white),
-                                                        shape: BoxShape.circle,
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .primary,
-                                                      ),
-                                                      child: Text(
-                                                        "5",
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 12.h),
-                                                      ),
-                                                    ),
-                                                  )
-                                                : Container()
+                                            // index == 0
+                                            //     ? Positioned(
+                                            //         bottom: 0,
+                                            //         right: 0,
+                                            //         child: Container(
+                                            //           padding: EdgeInsets.all(4.h),
+                                            //           decoration: BoxDecoration(
+                                            //             border: Border.all(color: Colors.white),
+                                            //             shape: BoxShape.circle,
+                                            //             color: Theme.of(context).colorScheme.primary,
+                                            //           ),
+                                            //           child: Text(
+                                            //             "5",
+                                            //             style: TextStyle(color: Colors.white, fontSize: 12.h),
+                                            //           ),
+                                            //         ),
+                                            //       )
+                                            //     : Container()
                                           ],
                                         ),
                                         SizedBox(width: 15.w),
                                         Container(
                                             alignment: Alignment.centerLeft,
                                             child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Row(
                                                   children: [
                                                     Text(
-                                                      con.threads[index]
-                                                          .participants!
-                                                          .where((element) =>
-                                                              element.isSelf !=
-                                                              true)
+                                                      con.threads[index].participants!
+                                                          .where((element) => element.isSelf != true)
                                                           .toList()[0]
                                                           .number!, //"Mathew Murdock",
                                                       // style: ts(1, 0xff1B1A57, 14.sp, 5),
                                                       style: TextStyle(
-                                                        fontWeight: con
-                                                                    .threads[
-                                                                        index]
-                                                                    .threadRead ==
-                                                                false
+                                                        fontWeight: con.threads[index].threadRead == false
                                                             ? FontWeight.w600
                                                             : FontWeight.w400,
                                                         fontSize: 15.sp,
@@ -222,18 +256,12 @@ class MessagesScreen extends StatelessWidget {
                                                 Container(
                                                   width: 215.w,
                                                   child: Text(
-                                                    con.threads[index]
-                                                            .lastMessage ??
-                                                        'Empty chat',
+                                                    con.threads[index].lastMessage ?? 'Empty chat',
                                                     // style: ts(1, 0xff4F5E7B, 12.sp, 4),
                                                     style: TextStyle(
-                                                        fontSize: 13.sp,
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .tertiary),
+                                                        fontSize: 13.sp, color: Theme.of(context).colorScheme.tertiary),
                                                     maxLines: 2,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                    overflow: TextOverflow.ellipsis,
                                                   ),
                                                 ),
                                               ],
@@ -245,29 +273,15 @@ class MessagesScreen extends StatelessWidget {
                                       child: Text(
                                         con.threads[index].lastUpdated!
                                                 .split(':')[0]
-                                                .substring(con.threads[index]
-                                                        .lastUpdated!
-                                                        .split(':')[0]
-                                                        .length -
-                                                    2) +
+                                                .substring(con.threads[index].lastUpdated!.split(':')[0].length - 2) +
                                             ':' +
                                             con.threads[index].lastUpdated!
                                                 .split(':')[1]
-                                                .substring(con.threads[index]
-                                                        .lastUpdated!
-                                                        .split(':')[1]
-                                                        .length -
-                                                    2),
-                                        style: TextStyle(
-                                                fontSize: 13.sp,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .tertiary)
+                                                .substring(con.threads[index].lastUpdated!.split(':')[1].length - 2),
+                                        style: TextStyle(fontSize: 13.sp, color: Theme.of(context).colorScheme.tertiary)
                                             .copyWith(
-                                                color: con.threads[index]
-                                                            .threadRead ==
-                                                        false
-                                                    ? Color(0xFF242424)
+                                                color: con.threads[index].threadRead == false
+                                                    ? AppTheme.colors(context)?.textColor
                                                     : Color(0xFF6B6F80)),
                                         // ((index == 0 || index == 1 || index == 2)
                                         //         ? "${DateFormat('hh:mm').format(DateTime.now())}"

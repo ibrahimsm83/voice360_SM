@@ -27,18 +27,13 @@ class PhoneNumberField extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-                height: 15.h,
-                width: 25.w,
-                child: CountryPickerUtils.getDefaultFlagImage(country)),
+            Container(height: 15.h, width: 25.w, child: CountryPickerUtils.getDefaultFlagImage(country)),
             SizedBox(
               width: 8.0,
             ),
             Text(
               "+${country.phoneCode}",
-              style: TextStyle(
-                fontSize: 14.sp,
-              ),
+              style: TextStyle(fontSize: 14.sp, color: Colors.black),
             ),
           ],
         ),
@@ -64,13 +59,12 @@ class PhoneNumberField extends StatelessWidget {
             Row(
               children: [
                 CountryPickerDropdown(
-                  initialValue: 'PK',
+                  initialValue: 'US',
                   iconSize: 15.sp,
                   icon: Icon(Icons.keyboard_arrow_down_rounded),
                   isDense: true,
                   itemBuilder: _buildDropdownItem,
-                  sortComparator: (Country a, Country b) =>
-                      a.isoCode.compareTo(b.isoCode),
+                  sortComparator: (Country a, Country b) => a.phoneCode.compareTo(b.phoneCode),
                   onValuePicked: (Country country) {
                     onChanged!(country.phoneCode);
                   },

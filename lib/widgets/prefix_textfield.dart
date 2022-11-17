@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:itp_voice/app_theme.dart';
 
 class AppTextFieldWPrefix extends StatelessWidget {
   TextEditingController? textController;
@@ -26,7 +27,7 @@ class AppTextFieldWPrefix extends StatelessWidget {
     return TextField(
       readOnly: isReadOnly,
       textAlign: textAlign!,
-      style: Theme.of(context).textTheme.bodyText1,
+      style: Theme.of(context).textTheme.bodyText1?.copyWith(color: Colors.black),
       controller: textController,
       keyboardType: keyboardType,
       decoration: InputDecoration(

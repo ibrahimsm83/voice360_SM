@@ -22,6 +22,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
     return TextField(
       controller: widget.textController,
       obscureText: isObsecure,
+      style: TextStyle(color: Colors.black),
       decoration: InputDecoration(
         filled: true,
         fillColor: Color(0xffF6F7F9),
@@ -37,11 +38,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
               isObsecure = !isObsecure;
             });
           },
-          child: Icon(
-              isObsecure
-                  ? Icons.visibility_outlined
-                  : Icons.visibility_off_outlined,
-              color: Colors.grey[800]),
+          child: Icon(isObsecure ? Icons.visibility_outlined : Icons.visibility_off_outlined, color: Colors.grey[800]),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.transparent),

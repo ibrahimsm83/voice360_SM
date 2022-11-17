@@ -4,6 +4,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:itp_voice/app_theme.dart';
 import 'package:itp_voice/controllers/profile_controller.dart';
 import 'package:itp_voice/routes.dart';
 import 'package:itp_voice/widgets/app_textfield.dart';
@@ -24,8 +25,9 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         actions: [
           GestureDetector(
-            onTap: () {
-              Get.toNamed(Routes.SETTINGS_SCREEN_ROUTE);
+            onTap: () async {
+              await Get.toNamed(Routes.SETTINGS_SCREEN_ROUTE, arguments: con.mobileController.text);
+              con.fetchUserProfile();
             },
             child: Container(
               margin: EdgeInsets.only(right: 15.w, top: 10.h),
@@ -33,6 +35,7 @@ class ProfileScreen extends StatelessWidget {
                 "assets/images/settings.png",
                 height: 25.h,
                 width: 25.h,
+                color: AppTheme.colors(context)?.textColor,
               ),
             ),
           )
@@ -77,9 +80,7 @@ class ProfileScreen extends StatelessWidget {
                               height: 110.h,
                               width: 110.w,
                               decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      image: NetworkImage(profileImage))),
+                                  shape: BoxShape.circle, image: DecorationImage(image: NetworkImage(profileImage))),
                             ),
                             Positioned(
                               bottom: 0,
@@ -89,8 +90,7 @@ class ProfileScreen extends StatelessWidget {
                                   height: 35.h,
                                   width: 35.w,
                                   decoration: BoxDecoration(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                                    color: Theme.of(context).colorScheme.primary,
                                     shape: BoxShape.circle,
                                   ),
                                   child: Image.asset(
@@ -109,7 +109,7 @@ class ProfileScreen extends StatelessWidget {
                             TextSpan(
                               text: "Full Name",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: AppTheme.colors(context)?.textColor,
                                 fontSize: 17.sp,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -142,7 +142,7 @@ class ProfileScreen extends StatelessWidget {
                             TextSpan(
                               text: "Email Address",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: AppTheme.colors(context)?.textColor,
                                 fontSize: 17.sp,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -175,7 +175,7 @@ class ProfileScreen extends StatelessWidget {
                             TextSpan(
                               text: "Phone Number",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: AppTheme.colors(context)?.textColor,
                                 fontSize: 17.sp,
                                 fontWeight: FontWeight.w500,
                               ),

@@ -1,7 +1,7 @@
 class ContactResponse {
   List<Contact>? result;
   bool? errors;
-  Null? error;
+  dynamic error;
   String? message;
 
   ContactResponse({this.result, this.errors, this.error, this.message});
@@ -32,16 +32,16 @@ class ContactResponse {
 
 class Contact {
   bool? publicContact;
-  Null? facebookRefId;
+  dynamic facebookRefId;
   String? notes;
   String? dateAdded;
-  Null? zipcode;
+  dynamic zipcode;
   bool? possibleDupe;
-  Null? mobile;
-  Null? facebookUsername;
-  Null? city;
+  dynamic mobile;
+  dynamic facebookUsername;
+  dynamic city;
   String? email;
-  Null? taggingHistory;
+  dynamic taggingHistory;
   int? userId;
   bool? qualified;
   int? accountId;
@@ -49,19 +49,19 @@ class Contact {
   String? dateModified;
   bool? isCustomer;
   int? pk;
-  Null? formref;
-  Null? funnelRefId;
-  Null? state;
-  Null? address;
-  Null? businessIndustry;
-  Null? trackRefId;
-  Null? contactGuid;
+  dynamic formref;
+  dynamic funnelRefId;
+  dynamic state;
+  dynamic address;
+  dynamic businessIndustry;
+  dynamic trackRefId;
+  dynamic contactGuid;
   String? lastname;
   String? firstname;
   int? contactListId;
-  Null? businessName;
+  dynamic businessName;
   String? lastContacted;
-  Null? website;
+  dynamic website;
 
   Contact(
       {this.publicContact,

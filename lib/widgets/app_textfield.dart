@@ -7,23 +7,26 @@ class AppTextField extends StatelessWidget {
   bool isReadOnly;
   double? borderRadius;
   TextAlign? textAlign;
+  Function(String)? onChanged;
 
-  AppTextField(
-      {Key? key,
-      @required this.textController,
-      @required this.borderRadius = 10,
-      @required this.hint,
-      @required this.isReadOnly = false,
-      @required this.textAlign = TextAlign.left})
-      : super(key: key);
+  AppTextField({
+    Key? key,
+    @required this.textController,
+    @required this.borderRadius = 10,
+    @required this.hint,
+    @required this.isReadOnly = false,
+    @required this.textAlign = TextAlign.left,
+    this.onChanged,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       readOnly: isReadOnly,
       textAlign: textAlign!,
-      style: Theme.of(context).textTheme.bodyText1,
+      style: Theme.of(context).textTheme.bodyText1?.copyWith(color: Colors.black),
       controller: textController,
+      onChanged: onChanged,
       decoration: InputDecoration(
         filled: true,
         fillColor: Color(0xffF6F7F9),

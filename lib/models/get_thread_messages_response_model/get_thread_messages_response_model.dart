@@ -8,17 +8,10 @@ class GetThreadMessagesResponseModel {
   dynamic startKey;
 
   GetThreadMessagesResponseModel(
-      {this.result,
-      this.errors,
-      this.error,
-      this.message,
-      this.pageSize,
-      this.nextStartKey,
-      this.startKey});
+      {this.result, this.errors, this.error, this.message, this.pageSize, this.nextStartKey, this.startKey});
 
   GetThreadMessagesResponseModel.fromJson(Map<String, dynamic> json) {
-    result =
-        json['result'] != null ? new Result.fromJson(json['result']) : null;
+    result = json['result'] != null ? new Result.fromJson(json['result']) : null;
     errors = json['errors'];
     error = json['error'];
     message = json['message'];
@@ -85,17 +78,20 @@ class Messages {
   String? messageTimestamp;
   String? messageParticipantId;
   String? messageParticipant;
+  bool? isDelivered;
 
-  Messages(
-      {this.messageStatus,
-      this.pk,
-      this.messageBody,
-      this.messageProviderId,
-      this.messageMmsMedia,
-      this.callBackResponse,
-      this.messageTimestamp,
-      this.messageParticipantId,
-      this.messageParticipant});
+  Messages({
+    this.messageStatus,
+    this.pk,
+    this.messageBody,
+    this.messageProviderId,
+    this.messageMmsMedia,
+    this.callBackResponse,
+    this.messageTimestamp,
+    this.messageParticipantId,
+    this.messageParticipant,
+    this.isDelivered = true,
+  });
 
   Messages.fromJson(Map<String, dynamic> json) {
     messageStatus = json['message_status'];
@@ -103,12 +99,27 @@ class Messages {
     messageBody = json['message_body'];
     messageProviderId = json['message_provider_id'];
     messageMmsMedia = json['message_mms_media'];
-    callBackResponse = json['call_back_response'] != null
-        ? new CallBackResponse.fromJson(json['call_back_response'])
-        : null;
+    callBackResponse =
+        json['call_back_response'] != null ? new CallBackResponse.fromJson(json['call_back_response']) : null;
     messageTimestamp = json['message_timestamp'];
     messageParticipantId = json['message_participant_id'];
     messageParticipant = json['message_participant'];
+    isDelivered = true;
+  }
+
+  Messages.fromPayload(Map<String, dynamic> json) {
+    messageStatus = json['message_status'];
+    pk = json['message_thread_pk'];
+    messageBody = json['message'];
+    messageProviderId = json['message_provider_id'];
+    messageMmsMedia = json['media_id'];
+    // callBackResponse = json['call_back_response'] != null
+    //     ? new CallBackResponse.fromJson(json['call_back_response'])
+    //     : null;
+    messageTimestamp = json['message_timestamp'];
+    // messageParticipantId = json['message_participant_id'];
+    messageParticipant = json['from_number'];
+    isDelivered = true;
   }
 
   Map<String, dynamic> toJson() {

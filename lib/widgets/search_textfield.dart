@@ -37,9 +37,10 @@ class Searchbar extends StatelessWidget {
             child: TextField(
               onChanged: (value) => onChanged!(value),
               controller: controller,
+              style: TextStyle(color: Colors.black),
               decoration: InputDecoration.collapsed(
                 hintText: "Search",
-                hintStyle: TextStyle(fontSize: 16.w),
+                hintStyle: TextStyle(fontSize: 16.w, color: Colors.grey),
               ),
             ),
           ),

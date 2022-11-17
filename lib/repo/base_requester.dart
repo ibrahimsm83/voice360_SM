@@ -4,6 +4,7 @@ import 'dart:developer';
 // import 'package:beyown_flutter/screens/widgets/custom_loader.dart';
 // import 'package:beyown_flutter/screens/widgets/custom_toast.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
+import 'package:dio/dio.dart' as pdio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -57,10 +58,7 @@ class BaseRequester {
     try {
       response = await http.get(
         Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': bearerAuth
-        },
+        headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': bearerAuth},
       );
       _logRequestOnAlice(response);
       log(response.body);
@@ -89,17 +87,21 @@ class BaseRequester {
         }
         return jsonData;
       } else if (response.statusCode == 401) {
-        var tryRelogin = await _authRepo.reLoginUser();
-        if (tryRelogin.runtimeType == String) {
-          _authRepo.logoutUser();
-          Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
-          CustomToast.showToast("Session expired, Please login again", true);
-          return;
-        }
-        if (tryRelogin) {
-          final response = await baseGetAPI(url);
-          return response;
-        }
+        _authRepo.logoutUser();
+        Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
+        CustomToast.showToast("Session expired, Please login again", true);
+        return response.statusCode;
+        // var tryRelogin = await _authRepo.reLoginUser();
+        // if (tryRelogin.runtimeType == String) {
+        //   _authRepo.logoutUser();
+        //   Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
+        //   CustomToast.showToast("Session expired, Please login again", true);
+        //   return;
+        // }
+        // if (tryRelogin) {
+        //   final response = await baseGetAPI(url);
+        //   return response;
+        // }
       } else {
         jsonData = json.decode(response.body);
       }
@@ -115,8 +117,7 @@ class BaseRequester {
     }
   }
 
-  Future basePostAPI(url, body,
-      {successMsg, loading, protected = false, bool jsonType = true}) async {
+  Future basePostAPI(url, body, {successMsg, loading, protected = false, bool useDio = false}) async {
     protected ? await updateToken() : null;
 
     if (loading == true && loading != null) {
@@ -127,23 +128,48 @@ class BaseRequester {
 
     String bearerAuth = 'Bearer $token';
 
+    if (useDio) {
+      try {
+        pdio.Dio dio = pdio.Dio();
+        pdio.Response resp = await dio.post(
+          url,
+          data: pdio.FormData.fromMap(body),
+          options: pdio.Options(
+            headers: {
+              'Authorization': bearerAuth,
+            },
+          ),
+        );
+        if (resp.statusCode == 200) {
+          return resp.data;
+        }
+        return;
+      } catch (e) {
+        if (e is pdio.DioError) {
+          print(e.response);
+        } else {
+          print(e);
+        }
+
+        // CustomToast.showToast(e.toString(), true);
+        return;
+      }
+    }
+
     http.Response response;
     print(body);
     print(url);
 
     try {
-      response = await http.post(Uri.parse(url),
-          headers: protected
-              ? jsonType == true
-                  ? <String, String>{
-                      'Content-Type': 'application/json; charset=UTF-8',
-                      'Authorization': bearerAuth
-                    }
-                  : <String, String>{'Authorization': bearerAuth}
-              : <String, String>{
-                  'Content-Type': 'application/json; charset=UTF-8',
-                },
-          body: (body));
+      response = await http.post(
+        Uri.parse(url),
+        headers: protected
+            ? <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': bearerAuth}
+            : <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+        body: body,
+      );
 
       _logRequestOnAlice(response);
       // CustomLoader.dismisLoader();
@@ -165,25 +191,29 @@ class BaseRequester {
         jsonData = json.decode(response.body);
         return jsonData;
       } else if (response.statusCode == 401) {
-        if (protected == false) {
-          jsonData = json.decode(response.body);
+        _authRepo.logoutUser();
+        Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
+        CustomToast.showToast("Session expired, Please login again", true);
+        return;
+        // if (protected == false) {
+        //   jsonData = json.decode(response.body);
 
-          return jsonData;
-        }
-        var tryRelogin = await _authRepo.reLoginUser();
-        if (tryRelogin.runtimeType == String) {
-          _authRepo.logoutUser();
-          Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
-          CustomToast.showToast("Session expired, Please login again", true);
-          return;
-        }
-        if (tryRelogin) {
-          final response = await basePostAPI(url, body, protected: protected);
-          return response;
-        }
-        // jsonData = json.decode(response.body);
+        //   return jsonData;
+        // }
+        // var tryRelogin = await _authRepo.reLoginUser();
+        // if (tryRelogin.runtimeType == String) {
+        //   _authRepo.logoutUser();
+        //   Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
+        //   CustomToast.showToast("Session expired, Please login again", true);
+        //   return;
+        // }
+        // if (tryRelogin) {
+        //   final response = await basePostAPI(url, body, protected: protected);
+        //   return response;
+        // }
+        // jsonData = json.decode(response.body); //
 
-        // return jsonData;
+        // return jsonData; //
       } else {
         throw Exception('Failed');
       }
@@ -194,8 +224,7 @@ class BaseRequester {
     }
   }
 
-  Future basePatchAPI(url, body,
-      {successMsg, loading, protected = false, bool jsonType = true}) async {
+  Future basePatchAPI(url, body, {successMsg, loading, protected = false, bool jsonType = true}) async {
     protected ? await updateToken() : null;
 
     if (loading == true && loading != null) {
@@ -214,10 +243,7 @@ class BaseRequester {
       response = await http.patch(Uri.parse(url),
           headers: protected
               ? jsonType == true
-                  ? <String, String>{
-                      'Content-Type': 'application/json; charset=UTF-8',
-                      'Authorization': bearerAuth
-                    }
+                  ? <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': bearerAuth}
                   : <String, String>{'Authorization': bearerAuth}
               : <String, String>{
                   'Content-Type': 'application/json; charset=UTF-8',
@@ -244,25 +270,29 @@ class BaseRequester {
         jsonData = json.decode(response.body);
         return jsonData;
       } else if (response.statusCode == 401) {
-        if (protected == false) {
-          jsonData = json.decode(response.body);
+        _authRepo.logoutUser();
+        Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
+        CustomToast.showToast("Session expired, Please login again", true);
+        return;
+        // if (protected == false) {
+        //   jsonData = json.decode(response.body);
 
-          return jsonData;
-        }
-        var tryRelogin = await _authRepo.reLoginUser();
-        if (tryRelogin.runtimeType == String) {
-          _authRepo.logoutUser();
-          Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
-          CustomToast.showToast("Session expired, Please login again", true);
-          return;
-        }
-        if (tryRelogin) {
-          final response = await basePostAPI(url, body, protected: protected);
-          return response;
-        }
-        // jsonData = json.decode(response.body);
+        //   return jsonData;
+        // }
+        // var tryRelogin = await _authRepo.reLoginUser();
+        // if (tryRelogin.runtimeType == String) {
+        //   _authRepo.logoutUser();
+        //   Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
+        //   CustomToast.showToast("Session expired, Please login again", true);
+        //   return;
+        // }
+        // if (tryRelogin) {
+        //   final response = await basePostAPI(url, body, protected: protected);
+        //   return response;
+        // }
+        // jsonData = json.decode(response.body); //
 
-        // return jsonData;
+        // return jsonData; //
       } else {
         throw Exception('Failed');
       }
@@ -286,10 +316,7 @@ class BaseRequester {
 
     try {
       response = await http.put(Uri.parse(url),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            'Authorization': bearerAuth
-          },
+          headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': bearerAuth},
           body: jsonEncode(body));
 
       _logRequestOnAlice(response);
@@ -308,17 +335,21 @@ class BaseRequester {
         // return {};
         return jsonData;
       } else if (response.statusCode == 401) {
-        var tryRelogin = await _authRepo.reLoginUser();
-        if (tryRelogin.runtimeType == String) {
-          _authRepo.logoutUser();
-          Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
-          CustomToast.showToast("Session expired, Please login again", true);
-          return;
-        }
-        if (tryRelogin) {
-          final response = await basePutAPI(url, body, protected: protected);
-          return response;
-        }
+        _authRepo.logoutUser();
+        Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
+        CustomToast.showToast("Session expired, Please login again", true);
+        return;
+        // var tryRelogin = await _authRepo.reLoginUser();
+        // if (tryRelogin.runtimeType == String) {
+        //   _authRepo.logoutUser();
+        //   Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
+        //   CustomToast.showToast("Session expired, Please login again", true);
+        //   return;
+        // }
+        // if (tryRelogin) {
+        //   final response = await basePutAPI(url, body, protected: protected);
+        //   return response;
+        // }
       } else {
         throw Exception('Failed');
       }
@@ -329,8 +360,7 @@ class BaseRequester {
     }
   }
 
-  Future baseDeleteAPI(url, body,
-      {successMsg, loading, protected = false}) async {
+  Future baseDeleteAPI(url, body, {successMsg, loading, protected = false}) async {
     protected ? await updateToken() : null;
 
     if (loading == true && loading != null) {
@@ -343,10 +373,7 @@ class BaseRequester {
 
     try {
       response = await http.delete(Uri.parse(url),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            'Authorization': bearerAuth
-          },
+          headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': bearerAuth},
           body: jsonEncode(body));
 
       _logRequestOnAlice(response);
@@ -365,17 +392,21 @@ class BaseRequester {
         // return {};
         return jsonData;
       } else if (response.statusCode == 401) {
-        var tryRelogin = await _authRepo.reLoginUser();
-        if (tryRelogin.runtimeType == String) {
-          _authRepo.logoutUser();
-          Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
-          CustomToast.showToast("Session expired, Please login again", true);
-          return;
-        }
-        if (tryRelogin) {
-          final response = await baseDeleteAPI(url, body, protected: protected);
-          return response;
-        }
+        _authRepo.logoutUser();
+        Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
+        CustomToast.showToast("Session expired, Please login again", true);
+        return;
+        // var tryRelogin = await _authRepo.reLoginUser();
+        // if (tryRelogin.runtimeType == String) {
+        //   _authRepo.logoutUser();
+        //   Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
+        //   CustomToast.showToast("Session expired, Please login again", true);
+        //   return;
+        // }
+        // if (tryRelogin) {
+        //   final response = await baseDeleteAPI(url, body, protected: protected);
+        //   return response;
+        // }
       } else {
         throw Exception('Failed');
       }
@@ -394,8 +425,7 @@ class BaseRequester {
   }
 
   Future updateToken() async {
-    final String _token =
-        SharedPreferencesMethod.getString(StorageKeys.REFRESH_TOKEN)!;
+    final String _token = SharedPreferencesMethod.getString(StorageKeys.REFRESH_TOKEN)!;
     token = _token;
   }
 }

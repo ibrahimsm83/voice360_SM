@@ -3,6 +3,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:itp_voice/app_theme.dart';
 import 'package:itp_voice/controllers/settings_controller.dart';
 import 'package:itp_voice/routes.dart';
 import 'package:itp_voice/widgets/app_button.dart';
@@ -25,8 +26,7 @@ class ChangePassordScreen extends StatelessWidget {
               onTap: () {
                 Get.back();
               },
-              child:
-                  Icon(Icons.arrow_back_ios, color: Colors.black, size: 18.sp)),
+              child: Icon(Icons.arrow_back_ios, color: AppTheme.colors(context)?.textColor, size: 18.sp)),
         ),
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -73,7 +73,7 @@ class ChangePassordScreen extends StatelessWidget {
                         TextSpan(
                           text: "Current Password",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: AppTheme.colors(context)?.textColor,
                             fontSize: 17.sp,
                             fontWeight: FontWeight.w500,
                           ),
@@ -104,7 +104,7 @@ class ChangePassordScreen extends StatelessWidget {
                         TextSpan(
                           text: "New Password",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: AppTheme.colors(context)?.textColor,
                             fontSize: 17.sp,
                             fontWeight: FontWeight.w500,
                           ),
@@ -135,7 +135,7 @@ class ChangePassordScreen extends StatelessWidget {
                         TextSpan(
                           text: "Confirm New Password",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: AppTheme.colors(context)?.textColor,
                             fontSize: 17.sp,
                             fontWeight: FontWeight.w500,
                           ),

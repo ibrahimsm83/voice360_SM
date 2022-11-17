@@ -1,14 +1,20 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:itp_voice/app_theme.dart';
 import 'package:itp_voice/controllers/bindings.dart';
+import 'package:itp_voice/controllers/call_screen_controller.dart';
+import 'package:itp_voice/locator.dart';
 import 'package:itp_voice/notification_service.dart';
 import 'package:itp_voice/routes.dart';
 import 'package:itp_voice/screens/base_screen.dart';
 import 'package:itp_voice/screens/login_screen.dart';
+import 'package:itp_voice/widgets/custom_toast.dart';
+import 'package:sip_ua/sip_ua.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // await Firebase.initializeApp();
@@ -21,7 +27,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
+  setupLocator();
   // Step 3
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   LocalNotificationService.initialize();
@@ -40,22 +48,23 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, _) {
-        return GetMaterialApp(
-          title: 'ITP Voice',
-          initialBinding: Binding(),
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSwatch().copyWith(
-              primary: Color(0xff6982FF),
-              secondary: Color(0xff242424),
-              tertiary: Color(0xff6B6F80),
-            ),
-            fontFamily: 'Noto Sans',
+        return DefaultTextStyle(
+          style: const TextStyle(
+            fontFamily: 'Nato Sans',
           ),
-          debugShowCheckedModeBanner: false,
-          // translations: Languages(),
-          // fallbackLocale: const Locale('en', 'US'),
-          getPages: AppRoutes.routes,
-          initialRoute: Routes.LOGIN_SCREEN_ROUTE,
+          child: GetMaterialApp(
+            title: 'ITP Voice',
+            initialBinding: Binding(),
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: ThemeMode.light,
+            debugShowCheckedModeBanner: false,
+
+            // translations: Languages(),
+            // fallbackLocale: const Locale('en', 'US'),
+            getPages: AppRoutes.routes,
+            initialRoute: Routes.LOGIN_SCREEN_ROUTE,
+          ),
         );
       },
     );

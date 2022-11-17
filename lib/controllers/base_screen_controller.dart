@@ -10,8 +10,7 @@ import 'package:itp_voice/storage_keys.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sip_ua/sip_ua.dart';
 
-class BaseScreenController extends GetxController
-    implements SipUaHelperListener {
+class BaseScreenController extends GetxController implements SipUaHelperListener {
   RxInt currentTab = 0.obs;
 
   SIPUAHelper? helper;
@@ -19,9 +18,9 @@ class BaseScreenController extends GetxController
   @override
   void onInit() {
     // TODO: implement onInit
-    //helper = Get.find<SIPUAHelper>();
-    //_bindEventListeners();
-    //loadSettings();
+    helper = Get.find<SIPUAHelper>();
+    _bindEventListeners();
+    loadSettings();
     super.onInit();
   }
 
@@ -41,9 +40,7 @@ class BaseScreenController extends GetxController
 
     UaSettings settings = UaSettings();
     settings.webSocketUrl = Config.WEB_SOCKET_URL;
-    settings.webSocketSettings.extraHeaders = {
-      "Proxy-Authorization": "Digest realm=${_realm}"
-    };
+    settings.webSocketSettings.extraHeaders = {"Proxy-Authorization": "Digest realm=${_realm}"};
     settings.webSocketSettings.allowBadCertificate = true;
     settings.uri = "${_username}@${_realm}";
     settings.authorizationUser = "${_username}";
@@ -58,8 +55,10 @@ class BaseScreenController extends GetxController
   @override
   void callStateChanged(Call call, CallState state) {
     // TODO: implement callStateChanged
+    print(state.state);
     if (state.state == CallStateEnum.CALL_INITIATION) {
       // Navigator.pushNamed(context, '/callscreen', arguments: call);
+
       Get.toNamed(
         Routes.CALL_SCREEN_ROUTE,
         arguments: call,
@@ -82,13 +81,9 @@ class BaseScreenController extends GetxController
     // TODO: implement transportStateChanged
   }
 
-  Future<Widget?> handleCall(String number, BuildContext context,
-      [bool voiceonly = true]) async {
-    print(helper!.connected
-        ? "SIP SERVER CONNECTED"
-        : "SIP SERVER NOT CONNECTED");
-    if (defaultTargetPlatform == TargetPlatform.android ||
-        defaultTargetPlatform == TargetPlatform.iOS) {
+  Future<Widget?> handleCall(String number, BuildContext context, [bool voiceonly = true]) async {
+    print(helper!.connected ? "SIP SERVER CONNECTED" : "SIP SERVER NOT CONNECTED");
+    if (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS) {
       await Permission.microphone.request();
       await Permission.camera.request();
     }
@@ -119,16 +114,13 @@ class BaseScreenController extends GetxController
     flwebrtc.MediaStream mediaStream;
 
     if (kIsWeb && !voiceonly) {
-      mediaStream = await flwebrtc.navigator.mediaDevices
-          .getDisplayMedia(mediaConstraints);
+      mediaStream = await flwebrtc.navigator.mediaDevices.getDisplayMedia(mediaConstraints);
       mediaConstraints['video'] = false;
-      flwebrtc.MediaStream userStream =
-          await flwebrtc.navigator.mediaDevices.getUserMedia(mediaConstraints);
+      flwebrtc.MediaStream userStream = await flwebrtc.navigator.mediaDevices.getUserMedia(mediaConstraints);
       mediaStream.addTrack(userStream.getAudioTracks()[0], addToNative: true);
     } else {
       mediaConstraints['video'] = !voiceonly;
-      mediaStream =
-          await flwebrtc.navigator.mediaDevices.getUserMedia(mediaConstraints);
+      mediaStream = await flwebrtc.navigator.mediaDevices.getUserMedia(mediaConstraints);
 
       helper!.call(number, voiceonly: voiceonly, mediaStream: mediaStream);
       // _preferences.setString('dest', number);

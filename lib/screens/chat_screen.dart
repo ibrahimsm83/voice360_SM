@@ -1,15 +1,21 @@
+import 'package:floating_bottom_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:itp_voice/app_theme.dart';
 import 'package:itp_voice/controllers/chat_controller.dart';
 import 'package:itp_voice/controllers/settings_controller.dart';
 import 'package:itp_voice/models/message.dart';
 import 'package:itp_voice/routes.dart';
+import 'package:itp_voice/screens/home_screen.dart';
 import 'package:itp_voice/widgets/app_button.dart';
 import 'package:itp_voice/widgets/chat_message_tile.dart';
 import 'package:itp_voice/widgets/phone_number_field.dart';
+
+import '../repo/shares_preference_repo.dart';
+import '../storage_keys.dart';
 
 class ChatScreen extends StatelessWidget {
   ChatScreen({Key? key}) : super(key: key);
@@ -36,45 +42,81 @@ class ChatScreen extends StatelessWidget {
                 height: 0,
                 color: Colors.grey,
               ),
-              SizedBox(
-                height: 12.h,
-              ),
               Row(
                 children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 20.w, right: 20.w),
-                    height: 20.h,
-                    width: 20.h,
-                    child: Image.asset(
-                      "assets/images/paperclip.png",
-                    ),
-                  ),
-                  Container(
-                    width: 250.w,
-                    height: 30.h,
-                    alignment: Alignment.centerLeft,
-                    // color: Colors.blue,
-                    child: TextField(
-                      controller: con.messageController,
-                      style: TextStyle(fontSize: 14.sp),
-                      decoration: InputDecoration.collapsed(
-                        hintStyle: TextStyle(
-                          fontSize: 14.sp,
+                  Expanded(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 10.h,
                         ),
-                        hintText: "Write a message",
-                      ),
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () => con.sendMessage(isImage: true),
+                              child: Container(
+                                margin: EdgeInsets.only(left: 20.w, right: 20.w),
+                                height: 20.h,
+                                width: 20.h,
+                                child: Image.asset(
+                                  "assets/images/paperclip.png",
+                                  color: AppTheme.colors(context)?.textColor,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: 250.w,
+                              height: 30.h,
+                              alignment: Alignment.centerLeft,
+                              // color: Colors.blue,
+                              child: TextField(
+                                controller: con.messageController,
+                                style: TextStyle(fontSize: 14.sp),
+                                decoration: InputDecoration.collapsed(
+                                  hintStyle: TextStyle(
+                                    fontSize: 14.sp,
+                                  ),
+                                  hintText: "Write a message",
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  Spacer(),
-                  GestureDetector(
-                    onTap: () => con.sendMessage(),
-                    child: Container(
-                      margin:
-                          EdgeInsets.only(left: 20.w, right: 20.w, top: 8.h),
-                      height: 20.h,
-                      width: 20.h,
-                      child: Image.asset(
-                        "assets/images/send.png",
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Obx(
+                      () => GestureDetector(
+                        onTap: () => con.sendMessage(),
+                        child: Container(
+                          color: Colors.transparent,
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Container(
+                            margin: const EdgeInsets.only(
+                              right: 12,
+                              top: 12,
+                            ),
+                            padding: EdgeInsets.only(left: 4.w, right: 4.w, top: 4.w, bottom: 4.w),
+                            width: 32,
+                            height: 32,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                border: con.isMessageLoading.value == true
+                                    ? null
+                                    : Border.all(width: 1.5, color: AppColors.black)),
+                            child: con.isMessageLoading.value == true
+                                ? CircularProgressIndicator(
+                                    color: AppColors.black,
+                                  )
+                                : Image.asset(
+                                    "assets/images/send_icon.jpg",
+                                  ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -92,7 +134,7 @@ class ChatScreen extends StatelessWidget {
             },
             child: Icon(
               Icons.arrow_back_ios,
-              color: Colors.black,
+              color: AppTheme.colors(context)?.textColor,
               size: 18.sp,
             ),
           ),
@@ -103,7 +145,7 @@ class ChatScreen extends StatelessWidget {
         title: Container(
           padding: EdgeInsets.only(top: 10.h),
           child: Text(
-            "Aiden Mathew",
+            con.threadNumber ?? "",
             style: TextStyle(
               color: Theme.of(context).colorScheme.secondary,
               fontSize: 20.sp,
@@ -111,6 +153,40 @@ class ChatScreen extends StatelessWidget {
             ),
           ),
         ),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => Scaffold(
+                        body: Padding(
+                          padding: const EdgeInsets.only(bottom: 40),
+                          child: HomeScreen(
+                            initialValue: con.threadNumber ?? "",
+                          ),
+                        ),
+                      )));
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 20, top: 7),
+              child: Icon(
+                Icons.phone,
+                color: AppTheme.colors(context)?.textColor,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Get.toNamed(Routes.CHAT_DETAIL_ROUTE, arguments: con.threadNumber ?? "");
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 20, top: 7),
+              child: Icon(
+                Icons.info_outline,
+                color: AppTheme.colors(context)?.textColor,
+              ),
+            ),
+          )
+        ],
       ),
       body: Container(
         child: Column(
@@ -128,36 +204,32 @@ class ChatScreen extends StatelessWidget {
                         reverse: true,
                         shrinkWrap: true,
                         controller: _scrollController,
-                        padding: EdgeInsets.symmetric(
-                            vertical: minValue * 7, horizontal: 0),
+                        padding: EdgeInsets.symmetric(vertical: minValue * 7, horizontal: 0),
                         itemCount: con.messages?.result?.messages?.length ?? 0,
                         itemBuilder: (context, index) {
-                          final Message message = myMessagesList[index];
+                          // final Message message = myMessagesList[index];
+                          String? apiId = SharedPreferencesMethod.getString(StorageKeys.API_ID);
+                          String _token = SharedPreferencesMethod.getString(StorageKeys.ACCESS_TOKEN)!;
                           return MyMessageChatTile(
-                            message: con.messages?.result?.messages?[index]
-                                    .messageBody ??
-                                '',
-                            isCurrentUser: (con.messages?.result
-                                        ?.messages?[index].messageParticipant ??
-                                    '') ==
-                                con.myNumber,
-                            deliveryTime: con.messages!.result!.messages![index]
-                                    .messageTimestamp!
-                                    .split(':')[0]
-                                    .substring(con.messages!.result!
-                                            .messages![index].messageTimestamp!
-                                            .split(':')[0]
-                                            .length -
-                                        2) +
+                            isDelivered: con.messages?.result?.messages?[index].isDelivered,
+                            media: con.messages?.result?.messages?[index].messageMmsMedia == null
+                                ? null
+                                : "https://api.itpscorp.com/dev/portal/itpvoice/v2/${apiId}/my-extension/chat/media/${con.messages?.result?.messages?[index].messageMmsMedia}?token=${_token}",
+                            fileName: con.messages?.result?.messages?[index].messageMmsMedia,
+                            message: con.messages?.result?.messages?[index].messageBody ?? '',
+                            isCurrentUser:
+                                (con.messages?.result?.messages?[index].messageParticipant ?? '') == con.myNumber,
+                            deliveryTime: DateTime.parse(con.messages!.result!.messages![index].messageTimestamp!)
+                                    .toLocal()
+                                    .hour
+                                    .toString()
+                                    .padLeft(2, "0") +
                                 ':' +
-                                con.messages!.result!.messages![index]
-                                    .messageTimestamp!
-                                    .split(':')[1]
-                                    .substring(con.messages!.result!
-                                            .messages![index].messageTimestamp!
-                                            .split(':')[1]
-                                            .length -
-                                        2),
+                                DateTime.parse(con.messages!.result!.messages![index].messageTimestamp!)
+                                    .toLocal()
+                                    .minute
+                                    .toString()
+                                    .padLeft(2, "0"),
                           );
                         },
                       ),

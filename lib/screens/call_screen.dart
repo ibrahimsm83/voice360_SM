@@ -67,8 +67,7 @@ class CallScreen extends StatelessWidget {
           if (con.voiceonly) {
             advanceActions.add(Obx(() => ActionButton(
                   title: con.speakerOn.value ? 'speaker off' : 'speaker on',
-                  icon:
-                      con.speakerOn.value ? Icons.volume_off : Icons.volume_up,
+                  icon: con.speakerOn.value ? Icons.volume_off : Icons.volume_up,
                   checked: con.speakerOn.value,
                   onPressed: () => con.toggleSpeaker(),
                 )));
@@ -128,14 +127,10 @@ class CallScreen extends StatelessWidget {
 
     actionWidgets.add(Padding(
         padding: const EdgeInsets.all(3),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: basicActions)));
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: basicActions)));
 
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: actionWidgets);
+        crossAxisAlignment: CrossAxisAlignment.end, mainAxisAlignment: MainAxisAlignment.end, children: actionWidgets);
   }
 
   @override
@@ -144,239 +139,258 @@ class CallScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        body: Container(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 20.h),
-                  child: buildContent(),
-                ),
+        body: Obx(
+          () => Stack(
+            fit: StackFit.expand,
+            children: [
+              Container(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 20.h),
+                        child: buildContent(),
+                      ),
 
-                // (con.call!.direction == "INCOMING")
-                //     ? Obx(() => con.state.value == CallStateEnum.ACCEPTED
-                //         ? Container()
-                //         : Column(
-                //             mainAxisAlignment: MainAxisAlignment.end,
-                //             children: [
-                //               SizedBox(
-                //                 height: 400.h,
-                //               ),
-                //               Row(
-                //                 mainAxisAlignment: MainAxisAlignment.center,
-                //                 children: [
-                //                   Obx(
-                //                     () => ActionButton(
-                //                       icon: Icons.call_outlined,
-                //                       checked: false,
-                //                       fillColor: con.hold.value
-                //                           ? Theme.of(context)
-                //                               .colorScheme
-                //                               .secondary
-                //                           : Colors.white,
-                //                       onPressed: () {
-                //                         con.handleAccept();
-                //                       },
-                //                       iconColor:
-                //                           Theme.of(context).colorScheme.primary,
-                //                     ),
-                //                   ),
-                //                   SizedBox(
-                //                     width: 40.w,
-                //                   ),
-                //                   ActionButton(
-                //                       icon: Icons.call_end_outlined,
-                //                       fillColor: Colors.red,
-                //                       checked: false,
-                //                       onPressed: () {
-                //                         con.handleHangup();
-                //                       },
-                //                       iconColor: Colors.white),
-                //                 ],
-                //               ),
-                //             ],
-                //           ))
-                //     :
-                Obx(
-                  () => con.isIncomingCall!.value &&
-                          !con.isIncomingCallAccepted!.value
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            SizedBox(
-                              height: 400.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Obx(
-                                  () => ActionButton(
-                                    icon: Icons.call_outlined,
-                                    checked: false,
-                                    fillColor: con.hold.value
-                                        ? Theme.of(context)
-                                            .colorScheme
-                                            .secondary
-                                        : Colors.white,
-                                    onPressed: () {
-                                      con.handleAccept();
-                                    },
-                                    iconColor:
-                                        Theme.of(context).colorScheme.primary,
+                      // (con.call!.direction == "INCOMING")
+                      //     ? Obx(() => con.state.value == CallStateEnum.ACCEPTED
+                      //         ? Container()
+                      //         : Column(
+                      //             mainAxisAlignment: MainAxisAlignment.end,
+                      //             children: [
+                      //               SizedBox(
+                      //                 height: 400.h,
+                      //               ),
+                      //               Row(
+                      //                 mainAxisAlignment: MainAxisAlignment.center,
+                      //                 children: [
+                      //                   Obx(
+                      //                     () => ActionButton(
+                      //                       icon: Icons.call_outlined,
+                      //                       checked: false,
+                      //                       fillColor: con.hold.value
+                      //                           ? Theme.of(context)
+                      //                               .colorScheme
+                      //                               .secondary
+                      //                           : Colors.white,
+                      //                       onPressed: () {
+                      //                         con.handleAccept();
+                      //                       },
+                      //                       iconColor:
+                      //                           Theme.of(context).colorScheme.primary,
+                      //                     ),
+                      //                   ),
+                      //                   SizedBox(
+                      //                     width: 40.w,
+                      //                   ),
+                      //                   ActionButton(
+                      //                       icon: Icons.call_end_outlined,
+                      //                       fillColor: Colors.red,
+                      //                       checked: false,
+                      //                       onPressed: () {
+                      //                         con.handleHangup();
+                      //                       },
+                      //                       iconColor: Colors.white),
+                      //                 ],
+                      //               ),
+                      //             ],
+                      //           ))
+                      //     :
+                      Obx(
+                        () => con.isIncomingCall!.value && !con.isIncomingCallAccepted!.value
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  SizedBox(
+                                    height: 400.h,
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 40.w,
-                                ),
-                                ActionButton(
-                                    icon: Icons.call_end_outlined,
-                                    fillColor: Colors.red,
-                                    checked: false,
-                                    onPressed: () {
-                                      con.handleHangup(goBack: true);
-                                    },
-                                    iconColor: Colors.white),
-                              ],
-                            ),
-                          ],
-                        )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            SizedBox(
-                              height: 200.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Obx(
-                                  () => ActionButton(
-                                    icon: con.audioMuted.value
-                                        ? Icons.mic_off_outlined
-                                        : Icons.mic_outlined,
-                                    checked: false,
-                                    onPressed: () {
-                                      if ((con.state ==
-                                              CallStateEnum.CALL_INITIATION ||
-                                          con.state ==
-                                              CallStateEnum.CONNECTING ||
-                                          con.state == CallStateEnum.NONE ||
-                                          con.state == CallStateEnum.ENDED)) {
-                                        return;
-                                      } else {
-                                        con.muteAudio();
-                                      }
-                                    },
-                                    iconColor: (con.state ==
-                                                CallStateEnum.CALL_INITIATION ||
-                                            con.state ==
-                                                CallStateEnum.CONNECTING ||
-                                            con.state == CallStateEnum.NONE ||
-                                            con.state == CallStateEnum.ENDED)
-                                        ? Colors.grey
-                                        : Theme.of(context).colorScheme.primary,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Obx(
+                                        () => ActionButton(
+                                          icon: Icons.call_outlined,
+                                          checked: false,
+                                          fillColor:
+                                              con.hold.value ? Theme.of(context).colorScheme.secondary : Colors.white,
+                                          onPressed: () {
+                                            con.handleAccept();
+                                          },
+                                          iconColor: Theme.of(context).colorScheme.primary,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 40.w,
+                                      ),
+                                      ActionButton(
+                                          icon: Icons.call_end_outlined,
+                                          fillColor: Colors.red,
+                                          checked: false,
+                                          onPressed: () {
+                                            con.handleHangup(goBack: true);
+                                          },
+                                          iconColor: Colors.white),
+                                    ],
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                ActionButton(
-                                  icon: Icons.dialpad_outlined,
-                                  checked: false,
-                                  onPressed: () {
-                                    Get.toNamed(Routes.DIALPAD_SCREEN_ROUTE);
-                                  },
-                                  iconColor:
-                                      Theme.of(context).colorScheme.primary,
-                                ),
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                Obx(
-                                  () => ActionButton(
-                                    icon: con.speakerOn.value
-                                        ? Icons.volume_off_outlined
-                                        : Icons.volume_up_outlined,
-                                    checked: false,
-                                    onPressed: () {
-                                      if ((con.state ==
-                                              CallStateEnum.CALL_INITIATION ||
-                                          con.state ==
-                                              CallStateEnum.CONNECTING ||
-                                          con.state == CallStateEnum.NONE ||
-                                          con.state == CallStateEnum.ENDED)) {
-                                        return;
-                                      } else {
-                                        con.toggleSpeaker();
-                                      }
-                                    },
-                                    iconColor: (con.state ==
-                                                CallStateEnum.CALL_INITIATION ||
-                                            con.state ==
-                                                CallStateEnum.CONNECTING ||
-                                            con.state == CallStateEnum.NONE ||
-                                            con.state == CallStateEnum.ENDED)
-                                        ? Colors.grey
-                                        : Theme.of(context).colorScheme.primary,
+                                ],
+                              )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  SizedBox(
+                                    height: 200.h,
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Obx(
-                                  () => ActionButton(
-                                    icon: Icons.pause,
-                                    checked: false,
-                                    fillColor: con.hold.value
-                                        ? Theme.of(context)
-                                            .colorScheme
-                                            .secondary
-                                        : Colors.white,
-                                    onPressed: () {
-                                      if ((con.state ==
-                                              CallStateEnum.CALL_INITIATION ||
-                                          con.state ==
-                                              CallStateEnum.CONNECTING ||
-                                          con.state == CallStateEnum.NONE ||
-                                          con.state == CallStateEnum.ENDED)) {
-                                        return;
-                                      } else {
-                                        con.handleHold();
-                                      }
-                                    },
-                                    iconColor: (con.state ==
-                                                CallStateEnum.CALL_INITIATION ||
-                                            con.state ==
-                                                CallStateEnum.CONNECTING ||
-                                            con.state == CallStateEnum.NONE ||
-                                            con.state == CallStateEnum.ENDED)
-                                        ? Colors.grey
-                                        : Theme.of(context).colorScheme.primary,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Obx(
+                                        () => ActionButton(
+                                          icon: con.audioMuted.value ? Icons.mic_off_outlined : Icons.mic_outlined,
+                                          checked: false,
+                                          onPressed: () {
+                                            if ((con.state == CallStateEnum.CALL_INITIATION ||
+                                                con.state == CallStateEnum.CONNECTING ||
+                                                con.state == CallStateEnum.NONE ||
+                                                con.state == CallStateEnum.ENDED)) {
+                                              return;
+                                            } else {
+                                              con.muteAudio();
+                                            }
+                                          },
+                                          iconColor: (con.state == CallStateEnum.CALL_INITIATION ||
+                                                  con.state == CallStateEnum.CONNECTING ||
+                                                  con.state == CallStateEnum.NONE ||
+                                                  con.state == CallStateEnum.ENDED)
+                                              ? Colors.grey
+                                              : Theme.of(context).colorScheme.primary,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      ActionButton(
+                                        icon: Icons.dialpad_outlined,
+                                        checked: false,
+                                        onPressed: () {
+                                          Get.toNamed(Routes.DIALPAD_SCREEN_ROUTE);
+                                        },
+                                        iconColor: Theme.of(context).colorScheme.primary,
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Obx(
+                                        () => ActionButton(
+                                          icon: con.speakerOn.value
+                                              ? Icons.volume_off_outlined
+                                              : Icons.volume_up_outlined,
+                                          checked: false,
+                                          onPressed: () {
+                                            if ((con.state == CallStateEnum.CALL_INITIATION ||
+                                                con.state == CallStateEnum.CONNECTING ||
+                                                con.state == CallStateEnum.NONE ||
+                                                con.state == CallStateEnum.ENDED)) {
+                                              return;
+                                            } else {
+                                              con.toggleSpeaker();
+                                            }
+                                          },
+                                          iconColor: (con.state == CallStateEnum.CALL_INITIATION ||
+                                                  con.state == CallStateEnum.CONNECTING ||
+                                                  con.state == CallStateEnum.NONE ||
+                                                  con.state == CallStateEnum.ENDED)
+                                              ? Colors.grey
+                                              : Theme.of(context).colorScheme.primary,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                ActionButton(
-                                    icon: Icons.call_end_outlined,
-                                    fillColor: Colors.red,
-                                    checked: false,
-                                    onPressed: () {
-                                      con.handleHangup();
-                                    },
-                                    iconColor: Colors.white),
-                              ],
-                            ),
-                          ],
-                        ),
+                                  SizedBox(
+                                    height: 20.h,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Obx(
+                                        () => ActionButton(
+                                          icon: Icons.bluetooth,
+                                          checked: false,
+                                          fillColor: Colors.white,
+                                          onPressed: () {
+                                            if ((con.state == CallStateEnum.CALL_INITIATION ||
+                                                con.state == CallStateEnum.CONNECTING ||
+                                                con.state == CallStateEnum.NONE ||
+                                                con.state == CallStateEnum.ENDED)) {
+                                              return;
+                                            } else {
+                                              con.turnOffSpeaker();
+                                            }
+                                          },
+                                          iconColor: (con.state == CallStateEnum.CALL_INITIATION ||
+                                                  con.state == CallStateEnum.CONNECTING ||
+                                                  con.state == CallStateEnum.NONE ||
+                                                  con.state == CallStateEnum.ENDED)
+                                              ? Colors.grey
+                                              : Theme.of(context).colorScheme.primary,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Obx(
+                                        () => ActionButton(
+                                          icon: Icons.pause,
+                                          checked: false,
+                                          fillColor:
+                                              con.hold.value ? Theme.of(context).colorScheme.secondary : Colors.white,
+                                          onPressed: () {
+                                            if ((con.state == CallStateEnum.CALL_INITIATION ||
+                                                con.state == CallStateEnum.CONNECTING ||
+                                                con.state == CallStateEnum.NONE ||
+                                                con.state == CallStateEnum.ENDED)) {
+                                              return;
+                                            } else {
+                                              con.handleHold();
+                                            }
+                                          },
+                                          iconColor: (con.state == CallStateEnum.CALL_INITIATION ||
+                                                  con.state == CallStateEnum.CONNECTING ||
+                                                  con.state == CallStateEnum.NONE ||
+                                                  con.state == CallStateEnum.ENDED)
+                                              ? Colors.grey
+                                              : Theme.of(context).colorScheme.primary,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      ActionButton(
+                                          icon: Icons.call_end_outlined,
+                                          fillColor: Colors.red,
+                                          checked: false,
+                                          onPressed: () {
+                                            con.handleHangup();
+                                          },
+                                          iconColor: Colors.white),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+              if (con.isNear.value == true)
+                Positioned.fill(
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      color: Colors.transparent,
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
       ),
@@ -433,10 +447,7 @@ class CallScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(6),
                 child: Text(
                   con.call!.remote_identity!,
-                  style: TextStyle(
-                      fontSize: 23.sp,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 23.sp, color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -445,8 +456,7 @@ class CallScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(6),
                   child: Text(
                     con.timeLabel.value.isEmpty
-                        ? (!con.isIncomingCallAccepted!.value &&
-                                con.isIncomingCall!.value)
+                        ? (!con.isIncomingCallAccepted!.value && con.isIncomingCall!.value)
                             ? "Incoming call"
                             : "Calling..."
                         : con.timeLabel.value,

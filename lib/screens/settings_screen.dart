@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
+import 'package:itp_voice/app_theme.dart';
 import 'package:itp_voice/controllers/settings_controller.dart';
 import 'package:itp_voice/repo/auth_repo.dart';
 import 'package:itp_voice/routes.dart';
@@ -25,8 +27,7 @@ class SettingsScreen extends StatelessWidget {
               onTap: () {
                 Get.back();
               },
-              child:
-                  Icon(Icons.arrow_back_ios, color: Colors.black, size: 18.sp)),
+              child: Icon(Icons.arrow_back_ios, color: AppTheme.colors(context)?.textColor, size: 18.sp)),
         ),
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -43,195 +44,228 @@ class SettingsScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Divider(
-              height: 0,
-            ),
-            GestureDetector(
-              onTap: () {
-                Get.toNamed(Routes.CHANGE_PASSWORD_ROUTE);
-              },
-              child: ListTile(
-                title: Text(
-                  "Change Password",
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Theme.of(context).colorScheme.tertiary,
-                  size: 18.sp,
-                ),
-              ),
-            ),
-            Divider(
-              height: 0,
-            ),
-            GestureDetector(
-              onTap: () {
-                Get.toNamed(Routes.CALL_SETTINGS_ROUTE);
-              },
-              child: ListTile(
-                title: Text(
-                  "Call Settings",
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Theme.of(context).colorScheme.tertiary,
-                  size: 18.sp,
-                ),
-              ),
-            ),
-            Divider(
-              height: 0,
-            ),
-            ListTile(
-              dense: true,
-              title: Text(
-                "My Number",
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            Obx(
-              () => Column(
-                children: [
-                  ListTile(
-                      dense: true,
+      body: Obx(
+        () => con.isLoading.value == true
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Container(
+                child: Column(
+                  children: [
+                    Divider(
+                      height: 0,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Get.toNamed(Routes.CHANGE_PASSWORD_ROUTE);
+                      },
+                      child: ListTile(
+                        title: Text(
+                          "Change Password",
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Theme.of(context).colorScheme.tertiary,
+                          size: 18.sp,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      height: 0,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Get.toNamed(Routes.CALL_SETTINGS_ROUTE);
+                      },
+                      child: ListTile(
+                        title: Text(
+                          "Call Settings",
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Theme.of(context).colorScheme.tertiary,
+                          size: 18.sp,
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      height: 0,
+                    ),
+                    ListTile(
                       title: Text(
-                        "+923341223566",
+                        "Dark mode",
                         style: TextStyle(
                           fontSize: 16.sp,
-                          color: Theme.of(context).colorScheme.tertiary,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                      trailing: GestureDetector(
-                        onTap: () {
-                          con.isPhoneEditing.value = true;
-                        },
-                        child: con.isPhoneEditing.value == false
-                            ? Text(
-                                "Edit",
+                      trailing: Obx(
+                        () => SizedBox(
+                          width: 70,
+                          child: FlutterSwitch(
+                            height: 22.h,
+                            width: 50.w,
+                            activeColor: Theme.of(context).colorScheme.primary,
+                            padding: 0,
+                            value: con.isDark.value,
+                            onToggle: (val) {
+                              con.isDark.value = val;
+                              con.changeTheme(val);
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      dense: true,
+                      title: Text(
+                        "My Number",
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    Obx(
+                      () => Column(
+                        children: [
+                          ListTile(
+                              dense: true,
+                              title: Text(
+                                con.myNumberController.text.isEmpty ? "+92XXX-XXXXXXX" : con.myNumberController.text,
                                 style: TextStyle(
                                   fontSize: 16.sp,
-                                  color: Theme.of(context).colorScheme.primary,
+                                  color: Theme.of(context).colorScheme.tertiary,
                                 ),
-                              )
-                            : Container(
-                                height: 5.h,
-                                width: 5.h,
                               ),
-                      )),
-                  con.isPhoneEditing.value
-                      ? Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20.w),
-                          child: PhoneNumberField(
-                            hint: "+923341223566",
+                              trailing: GestureDetector(
+                                onTap: () {
+                                  con.isPhoneEditing.value = true;
+                                },
+                                child: con.isPhoneEditing.value == false
+                                    ? Text(
+                                        "Edit",
+                                        style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: Theme.of(context).colorScheme.primary,
+                                        ),
+                                      )
+                                    : Container(
+                                        height: 5.h,
+                                        width: 5.h,
+                                      ),
+                              )),
+                          con.isPhoneEditing.value
+                              ? Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                  child: PhoneNumberField(
+                                    hint: "+92XXX-XXXXXXX",
+                                    textController: con.myNumberController,
+                                    onChanged: (code) {},
+                                  ),
+                                )
+                              : Container(),
+                          SizedBox(
+                            height: 20.h,
                           ),
-                        )
-                      : Container(),
-                  SizedBox(
-                    height: 20.h,
-                  ),
-                  con.isPhoneEditing.value
-                      ? Container(
-                          padding: EdgeInsets.symmetric(horizontal: 20.w),
-                          child: GestureDetector(
-                            onTap: () {
-                              con.isPhoneEditing.value = false;
-                            },
-                            child: AppButton(
-                              text: "Update",
-                            ),
-                          ),
-                        )
-                      : Container(),
-                  !con.isPhoneEditing.value
-                      ? Container()
-                      : SizedBox(
-                          height: 30.h,
-                        ),
-                ],
-              ),
-            ),
-            Divider(
-              height: 0,
-            ),
-            GestureDetector(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: 10.h, horizontal: 30.w),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                          con.isPhoneEditing.value
+                              ? Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      con.isPhoneEditing.value = false;
+                                      con.updateNumber();
+                                    },
+                                    child: AppButton(
+                                      text: "Update",
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                          !con.isPhoneEditing.value
+                              ? Container()
+                              : SizedBox(
+                                  height: 30.h,
+                                ),
+                        ],
                       ),
-                      title: Text(
-                        "Logout",
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                        ),
-                      ),
-                      content: Text(
-                        "Are you sure you want to logout?",
-                        style: TextStyle(fontSize: 16.sp),
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          child: new Text(
-                            "Yes",
-                            style: TextStyle(
-                              color: Colors.red,
-                            ),
-                          ),
-                          onPressed: () async {
-                            // Navigator.of(context).pop();
-                            await AuthRepo().logoutUser();
-                            Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
+                    ),
+                    Divider(
+                      height: 0,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              contentPadding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 30.w),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              title: Text(
+                                "Logout",
+                                style: TextStyle(
+                                  fontSize: 18.sp,
+                                ),
+                              ),
+                              content: Text(
+                                "Are you sure you want to logout?",
+                                style: TextStyle(fontSize: 16.sp),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: new Text(
+                                    "Yes",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    // Navigator.of(context).pop();
+                                    await AuthRepo().logoutUser();
+                                    Get.offAllNamed(Routes.LOGIN_SCREEN_ROUTE);
+                                  },
+                                ),
+                                TextButton(
+                                  child: new Text(
+                                    "No",
+                                    style: TextStyle(
+                                      color: Theme.of(context).colorScheme.tertiary,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
                           },
-                        ),
-                        TextButton(
-                          child: new Text(
-                            "No",
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.tertiary,
-                            ),
+                        );
+                      },
+                      child: ListTile(
+                        dense: true,
+                        title: Text(
+                          "Log out",
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w500,
                           ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
                         ),
-                      ],
-                    );
-                  },
-                );
-              },
-              child: ListTile(
-                dense: true,
-                title: Text(
-                  "Log out",
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: Colors.red,
-                    fontWeight: FontWeight.w500,
-                  ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -13,19 +13,10 @@ class ContactsRepo {
 
   createContact(String name, String notes, String phone, String email) async {
     try {
-      String? apiId =
-          await SharedPreferencesMethod.getString(StorageKeys.API_ID);
+      String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
 
-      final apiResponse = await requester.basePostAPI(
-          Endpoints.CREATE_CONTACT_URL(apiId),
-          jsonEncode({
-            'firstname': name,
-            'lastname': '',
-            'notes': notes,
-            'phone': phone,
-            'email': email
-          }),
-          protected: true);
+      final apiResponse = await requester
+          .basePostAPI(Endpoints.CREATE_CONTACT_URL(apiId), jsonEncode({'firstname': name, 'lastname': '', 'notes': notes, 'phone': phone, 'email': email}), protected: true);
 
       if (apiResponse != null) {
         if (apiResponse['errors']) {
@@ -39,21 +30,12 @@ class ContactsRepo {
     }
   }
 
-  updateContact(
-      dynamic id, String name, String notes, String phone, String email) async {
+  updateContact(dynamic id, String name, String notes, String phone, String email) async {
     try {
-      String? apiId =
-          await SharedPreferencesMethod.getString(StorageKeys.API_ID);
+      String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
 
       final apiResponse = await requester.basePatchAPI(
-          Endpoints.UPDATE_CONTACT_URL(apiId) + '/${id}',
-          jsonEncode({
-            'firstname': name,
-            'lastname': '',
-            'notes': notes,
-            'phone': phone,
-            'email': email
-          }),
+          Endpoints.UPDATE_CONTACT_URL(apiId) + '/${id}', jsonEncode({'firstname': name, 'lastname': '', 'notes': notes, 'phone': phone, 'email': email}),
           protected: true);
 
       if (apiResponse != null) {
@@ -93,8 +75,7 @@ class ContactsRepo {
     String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
 
     try {
-      final apiResponse =
-          await BaseRequesterMethods.baseRequester.baseDeleteAPI(
+      final apiResponse = await BaseRequesterMethods.baseRequester.baseDeleteAPI(
         Endpoints.DELETE_CONTACT(apiId) + "/$id",
         null,
         protected: true,
@@ -128,6 +109,18 @@ class ContactsRepo {
     } catch (e) {
       print(e.toString());
       return "Something went wrong";
+    }
+  }
+
+  updateMyNumber(String myNumber) async {
+    try {
+      await BaseRequesterMethods.baseRequester.basePatchAPI(
+        Endpoints.USER_PROFILE,
+        jsonEncode({"mobile": myNumber}),
+        protected: true,
+      );
+    } catch (e) {
+      throw (e.toString());
     }
   }
 }

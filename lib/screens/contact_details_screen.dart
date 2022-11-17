@@ -4,6 +4,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:itp_voice/app_theme.dart';
 import 'package:itp_voice/controllers/base_screen_controller.dart';
 import 'package:itp_voice/controllers/contacts_controller.dart';
 import 'package:itp_voice/models/contact_list_data_model.dart';
@@ -49,8 +50,7 @@ class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
                     onTap: () {
                       Get.back();
                     },
-                    child: Icon(Icons.arrow_back_ios,
-                        color: Colors.black, size: 18.sp)),
+                    child: Icon(Icons.arrow_back_ios, color: AppTheme.colors(context)?.textColor, size: 18.sp)),
               ),
               actions: [
                 GestureDetector(
@@ -77,9 +77,7 @@ class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
                                 style: TextStyle(
                                     fontSize: 18.sp,
                                     fontWeight: FontWeight.bold,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary),
+                                    color: Theme.of(context).colorScheme.secondary),
                               ),
                             ),
                             SizedBox(
@@ -88,18 +86,13 @@ class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
                             GestureDetector(
                               onTap: () {
                                 // Get.toNamed(Routes.CALL_HISTORY_SCREEN_ROUTE);
-                                Get.toNamed(Routes.EDIT_CONTACT_ROUTE,
-                                    arguments: {'contact': contact});
+                                Get.toNamed(Routes.EDIT_CONTACT_ROUTE, arguments: {'contact': contact});
                               },
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   "Edit",
-                                  style: TextStyle(
-                                      fontSize: 18.sp,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary),
+                                  style: TextStyle(fontSize: 18.sp, color: Theme.of(context).colorScheme.secondary),
                                 ),
                               ),
                             ),
@@ -115,11 +108,7 @@ class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   "Delete",
-                                  style: TextStyle(
-                                      fontSize: 18.sp,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary),
+                                  style: TextStyle(fontSize: 18.sp, color: Theme.of(context).colorScheme.secondary),
                                 ),
                               ),
                             ),
@@ -133,8 +122,7 @@ class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
                   },
                   child: Container(
                     margin: EdgeInsets.only(right: 20.w, top: 10.h),
-                    child: Icon(Icons.more_vert,
-                        color: Color(0xff6B6F80), size: 22.sp),
+                    child: Icon(Icons.more_vert, color: Color(0xff6B6F80), size: 22.sp),
                   ),
                 )
               ],
@@ -167,8 +155,7 @@ class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
                     Align(
                       alignment: Alignment.center,
                       child: TextBox(
-                        text: contact!.firstname![0].toUpperCase() +
-                            contact!.firstname![1].toUpperCase(),
+                        text: contact!.firstname![0].toUpperCase() + contact!.firstname![1].toUpperCase(),
                         height: 100.h,
                         width: 100.h,
                         singleCharFontSize: 30.sp,
@@ -203,7 +190,7 @@ class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
                           title: Text(
                             contact!.phone ?? '',
                             style: TextStyle(
-                              color: Colors.black,
+                              color: AppTheme.colors(context)?.textColor,
                               fontSize: 17.sp,
                               fontWeight: FontWeight.w600,
                             ),
@@ -217,8 +204,7 @@ class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    baseController.handleCall(
-                                        contact!.phone!, context);
+                                    baseController.handleCall(contact!.phone!, context);
                                   },
                                   child: Container(
                                     padding: EdgeInsets.all(7.h),
@@ -227,10 +213,7 @@ class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
                                           Radius.circular(8),
                                         ),
                                         gradient: LinearGradient(colors: [
-                                          Theme.of(context)
-                                              .colorScheme
-                                              .primary
-                                              .withOpacity(0.7),
+                                          Theme.of(context).colorScheme.primary.withOpacity(0.7),
                                           Theme.of(context).colorScheme.primary,
                                         ])),
                                     child: Container(
@@ -254,8 +237,7 @@ class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
                                       Radius.circular(8),
                                     ),
                                     border: Border.all(
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
+                                      color: Theme.of(context).colorScheme.primary,
                                     ),
                                   ),
                                   child: Container(
