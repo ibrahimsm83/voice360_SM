@@ -26,6 +26,7 @@ class AppUser {
   int? accountId;
   String? accessToken;
   String? refreshToken;
+  String? timeZone;
 
   AppUser({
     this.phone,
@@ -49,6 +50,7 @@ class AppUser {
     this.accountId,
     this.accessToken,
     this.refreshToken,
+    this.timeZone,
   });
 
   @override
@@ -74,12 +76,11 @@ class AppUser {
         uiColorMode: data['ui_color_mode'] as String?,
         itpVoiceUserId: data['itp_voice_user_id'] as dynamic,
         lastname: data['lastname'] as String?,
-        account: data['account'] == null
-            ? null
-            : Account.fromMap(data['account'] as Map<String, dynamic>),
+        account: data['account'] == null ? null : Account.fromMap(data['account'] as Map<String, dynamic>),
         accountId: data['account_id'] as int?,
         accessToken: data['access_token'] as String?,
         refreshToken: data['refresh_token'] as String?,
+        timeZone: data['time_zone'] as String?,
       );
 
   Map<String, dynamic> toMap() => {
@@ -104,6 +105,7 @@ class AppUser {
         'account_id': accountId,
         'access_token': accessToken,
         'refresh_token': refreshToken,
+        'time_zone': timeZone
       };
 
   /// `dart:convert`

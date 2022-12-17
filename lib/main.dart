@@ -15,6 +15,7 @@ import 'package:itp_voice/screens/base_screen.dart';
 import 'package:itp_voice/screens/login_screen.dart';
 import 'package:itp_voice/widgets/custom_toast.dart';
 import 'package:sip_ua/sip_ua.dart';
+import 'package:timezone/data/latest_all.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // await Firebase.initializeApp();
@@ -33,6 +34,7 @@ Future<void> main() async {
   // Step 3
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   LocalNotificationService.initialize();
+  initializeTimeZones();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,

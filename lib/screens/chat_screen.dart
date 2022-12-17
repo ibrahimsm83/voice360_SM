@@ -13,7 +13,7 @@ import 'package:itp_voice/screens/home_screen.dart';
 import 'package:itp_voice/widgets/app_button.dart';
 import 'package:itp_voice/widgets/chat_message_tile.dart';
 import 'package:itp_voice/widgets/phone_number_field.dart';
-
+import 'package:timezone/timezone.dart';
 import '../repo/shares_preference_repo.dart';
 import '../storage_keys.dart';
 
@@ -142,16 +142,20 @@ class ChatScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.transparent,
         centerTitle: true,
-        title: Container(
-          padding: EdgeInsets.only(top: 10.h),
-          child: Text(
-            con.threadNumber ?? "",
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.secondary,
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+        title: Obx(
+          () => con.loadTitle.value
+              ? SizedBox.shrink()
+              : Container(
+                  padding: EdgeInsets.only(top: 10.h),
+                  child: Text(
+                    con.threadNumber ?? "",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
         ),
         actions: [
           GestureDetector(
@@ -210,26 +214,22 @@ class ChatScreen extends StatelessWidget {
                           // final Message message = myMessagesList[index];
                           String? apiId = SharedPreferencesMethod.getString(StorageKeys.API_ID);
                           String _token = SharedPreferencesMethod.getString(StorageKeys.ACCESS_TOKEN)!;
+                          String? _timeZone = SharedPreferencesMethod.getString(StorageKeys.TIME_ZONE);
+                          final zone = getLocation(_timeZone ?? '');
+                          // print(zone.name);
+                          final time = TZDateTime.from(
+                              DateTime.parse(con.messages!.result!.messages![index].messageTimestamp!), zone);
                           return MyMessageChatTile(
                             isDelivered: con.messages?.result?.messages?[index].isDelivered,
                             media: con.messages?.result?.messages?[index].messageMmsMedia == null
                                 ? null
-                                : "https://api.itpscorp.com/dev/portal/itpvoice/v2/${apiId}/my-extension/chat/media/${con.messages?.result?.messages?[index].messageMmsMedia}?token=${_token}",
+                                : "https://api.itpscorp.com/portal/itpvoice/v2/${apiId}/my-extension/chat/media/${con.messages?.result?.messages?[index].messageMmsMedia}?token=${_token}",
                             fileName: con.messages?.result?.messages?[index].messageMmsMedia,
                             message: con.messages?.result?.messages?[index].messageBody ?? '',
                             isCurrentUser:
                                 (con.messages?.result?.messages?[index].messageParticipant ?? '') == con.myNumber,
-                            deliveryTime: DateTime.parse(con.messages!.result!.messages![index].messageTimestamp!)
-                                    .toLocal()
-                                    .hour
-                                    .toString()
-                                    .padLeft(2, "0") +
-                                ':' +
-                                DateTime.parse(con.messages!.result!.messages![index].messageTimestamp!)
-                                    .toLocal()
-                                    .minute
-                                    .toString()
-                                    .padLeft(2, "0"),
+                            deliveryTime:
+                                time.hour.toString().padLeft(2, "0") + ':' + time.minute.toString().padLeft(2, "0"),
                           );
                         },
                       ),

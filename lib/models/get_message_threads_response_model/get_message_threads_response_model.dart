@@ -8,17 +8,10 @@ class GetMessageThreadsResponseModel {
   Null? startKey;
 
   GetMessageThreadsResponseModel(
-      {this.result,
-      this.errors,
-      this.error,
-      this.message,
-      this.pageSize,
-      this.nextStartKey,
-      this.startKey});
+      {this.result, this.errors, this.error, this.message, this.pageSize, this.nextStartKey, this.startKey});
 
   GetMessageThreadsResponseModel.fromJson(Map<String, dynamic> json) {
-    result =
-        json['result'] != null ? new Result.fromJson(json['result']) : null;
+    result = json['result'] != null ? new Result.fromJson(json['result']) : null;
     errors = json['errors'];
     error = json['error'];
     message = json['message'];
@@ -63,8 +56,7 @@ class Result {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.messageThreads != null) {
-      data['message_threads'] =
-          this.messageThreads!.map((v) => v.toJson()).toList();
+      data['message_threads'] = this.messageThreads!.map((v) => v.toJson()).toList();
     }
     data['total_pages'] = this.totalPages;
     data['page'] = this.page;
@@ -77,6 +69,7 @@ class MessageThreads {
   String? lastMessage;
   String? lastUpdated;
   int? numberOfParticipants;
+  int? unreadMessages;
   int? pk;
   List<Participants>? participants;
 
@@ -85,6 +78,7 @@ class MessageThreads {
       this.lastMessage,
       this.lastUpdated,
       this.numberOfParticipants,
+      this.unreadMessages,
       this.pk,
       this.participants});
 
@@ -93,6 +87,7 @@ class MessageThreads {
     lastMessage = json['last_message'];
     lastUpdated = json['last_updated'];
     numberOfParticipants = json['number_of_participants'];
+    unreadMessages = json['unread_messages'];
     pk = json['pk'];
     if (json['participants'] != null) {
       participants = <Participants>[];
@@ -107,6 +102,7 @@ class MessageThreads {
     data['thread_read'] = this.threadRead;
     data['last_message'] = this.lastMessage;
     data['last_updated'] = this.lastUpdated;
+    data['unread_messages'] = this.unreadMessages;
     data['number_of_participants'] = this.numberOfParticipants;
     data['pk'] = this.pk;
     if (this.participants != null) {

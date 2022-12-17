@@ -90,6 +90,7 @@ class Routes {
 
 class Endpoints {
   static String LOGIN_URL = Config.BASE_URL_CRM + "/auth/login";
+  static String LOGOUT_URL = Config.BASE_URL_CRM + "/auth/logout";
   static String SERVICES_URL = Config.BASE_URL_CRM + "/services";
   static String REFRESH_TOKEN_URL = Config.BASE_URL_CRM + "/auth/refresh";
   static String USER_PROFILE = Config.BASE_URL_CRM + "/myprofile";
@@ -103,26 +104,22 @@ class Endpoints {
   }
 
   static String CREATE_CONTACT_URL(api_id) {
-    return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
-    // return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
+    return 'https://api.itpscorp.com/portal/360/accounts/${api_id}/my-account/contacts';
     return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/contacts";
   }
 
   static String UPDATE_CONTACT_URL(api_id) {
-    return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
-    // return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
+    return 'https://api.itpscorp.com/portal/360/accounts/${api_id}/my-account/contacts';
     return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/contacts";
   }
 
   static String DELETE_CONTACT(api_id) {
-    return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
-    // return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
+    return 'https://api.itpscorp.com/portal/360/accounts/${api_id}/my-account/contacts';
     return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/contacts";
   }
 
   static String GET_CONTACTS_URL(api_id) {
-    return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
-    // return 'https://api.itpscorp.com/dev/portal/360/accounts/${api_id}/my-account/contacts';
+    return 'https://api.itpscorp.com/portal/360/accounts/${api_id}/my-account/contacts';
     return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/contacts?unlimit=true";
   }
 
@@ -160,6 +157,10 @@ class Endpoints {
 
   static String GET_THREAD_MESSAGES(api_id, number, threadId) {
     return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/chat/sms/${number}/$threadId";
+  }
+
+  static String MARK_AS_READ(api_id, number, threadId) {
+    return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/chat/sms/${number}/$threadId/mark-read";
   }
 
   static String SEND_MESSAGE(api_id, number) {

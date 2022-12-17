@@ -45,6 +45,24 @@ class MessagesRepo {
     }
   }
 
+  Future<void> markAsRead(String threadId, String myNumber) async {
+    String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
+    try {
+      String number = myNumber;
+      final apiResponse = await BaseRequesterMethods.baseRequester.basePostAPI(
+        Endpoints.MARK_AS_READ(apiId, number, threadId),
+        jsonEncode(''),
+        protected: true,
+      );
+      if (!apiResponse['errors']) {
+        return;
+      }
+      return;
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   Future<Messages?> sendMessage(String myNumber, String body, String to, [String? image]) async {
     String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
     try {

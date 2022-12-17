@@ -60,6 +60,7 @@ class MessagesController extends GetxController {
       context: context,
       builder: (childContext) => AddThreadDialog(),
     );
+    print(res);
     if (res is List) {
       isloading.value = true;
       String numberString = "{\"list\": [\"${res[0]}\"]}";
@@ -89,7 +90,7 @@ class AddThreadDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String code = "92";
+    String code = "1";
     TextEditingController number = TextEditingController();
     String message = "";
     return Material(

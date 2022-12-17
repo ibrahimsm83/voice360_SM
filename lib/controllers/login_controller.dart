@@ -68,10 +68,13 @@ class LoginController extends GetxController {
     return true;
   }
 
+  bool initializedd = false;
+
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    initializedd = false;
     Future.delayed(Duration(seconds: 3), () async {
       SharedPreferences _prefs = await SharedPreferences.getInstance();
       String? token = _prefs.getString(StorageKeys.REFRESH_TOKEN);
@@ -89,7 +92,10 @@ class LoginController extends GetxController {
           showLogin.value = true;
           return;
         }
-        Get.offAllNamed(Routes.BASE_SCREEN_ROUTE);
+        if (Get.currentRoute == Routes.LOGIN_SCREEN_ROUTE) {
+          Get.offAllNamed(Routes.BASE_SCREEN_ROUTE);
+        }
+        initializedd = true;
       }
       bool? isDark = SharedPreferencesMethod.storage.getBool(StorageKeys.DARK_THEME);
       if (isDark == true) {

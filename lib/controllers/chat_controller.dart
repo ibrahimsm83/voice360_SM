@@ -42,9 +42,15 @@ class ChatController extends GetxController {
   @override
   void onInit() {
     fetchChat();
+    repo.markAsRead(threadId, myNumber);
     channelSubscription?.cancel();
     reconnector?.cancel();
     channelSubscription = messageSocketConnect().listen((body) {
+      try {
+        repo.markAsRead(threadId, myNumber);
+      } catch (e) {
+        print(e.toString());
+      }
       handleWebsocketResponce(body);
     }, onDone: () {
       print("Closed");
@@ -55,6 +61,11 @@ class ChatController extends GetxController {
           channelSubscription?.cancel();
           channelSubscription = messageSocketConnect().listen(
             (body) {
+              try {
+                repo.markAsRead(threadId, myNumber);
+              } catch (e) {
+                print(e.toString());
+              }
               handleWebsocketResponce(body);
             },
             onDone: () {
@@ -131,7 +142,7 @@ class ChatController extends GetxController {
     final apiId = SharedPreferencesMethod.getString(StorageKeys.API_ID);
 
     final connection = WebSocketChannel.connect(
-      Uri.parse("wss://websockets.api.itp247.net/sms"),
+      Uri.parse("wss://websockets.api.itp247.com/sms"),
       // headers: {
       //   "action": "login",
       //   "payload": {
@@ -163,11 +174,18 @@ class ChatController extends GetxController {
     return connection.stream;
   }
 
+  RxBool loadTitle = false.obs;
+
   fetchChat() async {
     isLoading.value = true;
     final res = await repo.getThreadMessages(threadId, myNumber);
     if (res.runtimeType == GetThreadMessagesResponseModel) {
       _messages.value = res;
+      if (threadNumber == null) {
+        threadNumber = _messages.value?.result?.participants?.firstWhere((element) => element.isSelf != true).number;
+        loadTitle.value = true;
+        loadTitle.value = false;
+      }
     }
     isLoading.value = false;
   }

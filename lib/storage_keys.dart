@@ -14,4 +14,5 @@ class StorageKeys {
   static String CURRENT_CALL_NUMBER = "current_call_number";
   static String CURRENT_CALL_NAME = "current_call_name";
   static String DARK_THEME = "dark_theme";
+  static String TIME_ZONE = "time_zone";
 }

@@ -26,19 +26,19 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     FirebaseMessaging.instance.getInitialMessage().then(
-      (message) {
+      (message) async {
         print("FirebaseMessaging.instance.getInitialMessage");
         if (message != null) {
-          print("New Notification");
-          // if (message.data['_id'] != null) {
-          //   Navigator.of(context).push(
-          //     MaterialPageRoute(
-          //       builder: (context) => DemoScreen(
-          //         id: message.data['_id'],
-          //       ),
-          //     ),
-          //   );
-          // }
+          if (message.data != null) {
+            final notificationData = message.data;
+            if ((notificationData as Map<String, dynamic>).containsKey("message_thread_id")) {
+              await Get.toNamed(Routes.CHAT_SCREEN_ROUTE,
+                  arguments: [notificationData["message_thread_id"], notificationData["to_phone_number"], null]);
+              if (con.initializedd == true) {
+                Get.offAllNamed(Routes.BASE_SCREEN_ROUTE);
+              }
+            }
+          }
         }
       },
     );
@@ -64,7 +64,16 @@ class _LoginScreenState extends State<LoginScreen> {
         if (message.notification != null) {
           print(message.notification!.title);
           print(message.notification!.body);
-          print("message.data22 ${message.data['_id']}");
+          print("message.data22 ${message.data}");
+          if (message != null) {
+            if (message.data != null) {
+              final notificationData = message.data;
+              if ((notificationData as Map<String, dynamic>).containsKey("message_thread_id")) {
+                Get.toNamed(Routes.CHAT_SCREEN_ROUTE,
+                    arguments: [notificationData["message_thread_id"], notificationData["to_phone_number"], null]);
+              }
+            }
+          }
         }
       },
     );
@@ -77,9 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/login_background.png"),
-              fit: BoxFit.cover),
+          image: DecorationImage(image: AssetImage("assets/images/login_background.png"), fit: BoxFit.cover),
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -186,17 +193,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 children: [
                                   Obx(
                                     () => Checkbox(
-                                      side:
-                                          BorderSide(color: Color(0xffC4C4C4)),
+                                      side: BorderSide(color: Color(0xffC4C4C4)),
                                       // activeColor: Colors.red,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(3),
                                       ),
                                       checkColor: Colors.white,
-                                      fillColor: MaterialStateProperty.all(
-                                          Theme.of(context)
-                                              .colorScheme
-                                              .primary),
+                                      fillColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary),
                                       value: con.isRemember.value,
                                       onChanged: (v) {
                                         con.isRemember.value = v!;
@@ -230,8 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       )
-                    : Container(
-                        child: Image.asset("assets/images/itp_white.png")),
+                    : Container(child: Image.asset("assets/images/itp_white.png")),
               ),
             ],
           ),

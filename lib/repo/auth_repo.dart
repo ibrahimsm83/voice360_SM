@@ -133,7 +133,9 @@ class AuthRepo {
   loginUser(String email, String password, bool rememberMe) async {
     LoginRequestModel body = LoginRequestModel(username: email, password: password);
     Map loginBody = body.toMap();
+    await FirebaseMessaging.instance.deleteToken();
     loginBody['mobile_device_id'] = await FirebaseMessaging.instance.getToken();
+    print('DEVICE TOKEN: ' + loginBody['mobile_device_id'].toString());
     final apiResponse = await BaseRequesterMethods.baseRequester
         .basePostAPI(Endpoints.LOGIN_URL, jsonEncode(loginBody), protected: false);
     if (apiResponse != null) {
@@ -143,6 +145,7 @@ class AuthRepo {
         } else {
           LoginReponseModel response = LoginReponseModel.fromMap(apiResponse);
           SharedPreferencesMethod.setString(StorageKeys.REFRESH_TOKEN, response.result!.refreshToken);
+          SharedPreferencesMethod.setString(StorageKeys.TIME_ZONE, response.result!.timeZone);
           final devicesApiResponse = await getDevices();
           if (devicesApiResponse.runtimeType == String) {
             SharedPreferencesMethod.storage.remove(StorageKeys.REFRESH_TOKEN);
@@ -236,6 +239,13 @@ class AuthRepo {
     await SharedPreferencesMethod.storage.remove(StorageKeys.ACCESS_TOKEN);
     await SharedPreferencesMethod.storage.remove(StorageKeys.REFRESH_TOKEN);
     await SharedPreferencesMethod.storage.remove(StorageKeys.APPUSER_DATA);
+    await SharedPreferencesMethod.storage.remove(StorageKeys.TIME_ZONE);
+    await FirebaseMessaging.instance.deleteToken();
+    try {
+      await BaseRequesterMethods.baseRequester.baseGetAPI(Endpoints.LOGOUT_URL);
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   getRealm() async {
