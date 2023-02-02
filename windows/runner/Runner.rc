@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.appicator" "\0"
-            VALUE "FileDescription", "itp_voice" "\0"
+            VALUE "FileDescription", "VOICE360" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "itp_voice" "\0"
+            VALUE "InternalName", "VOICE360" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2022 com.appicator. All rights reserved." "\0"
             VALUE "OriginalFilename", "itp_voice.exe" "\0"
-            VALUE "ProductName", "itp_voice" "\0"
+            VALUE "ProductName", "VOICE360" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
