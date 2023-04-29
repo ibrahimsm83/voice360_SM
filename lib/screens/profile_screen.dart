@@ -82,21 +82,21 @@ class ProfileScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle, image: DecorationImage(image: NetworkImage(profileImage))),
                             ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Container(
-                                  padding: EdgeInsets.all(5.5.h),
-                                  height: 35.h,
-                                  width: 35.w,
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).colorScheme.primary,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/camera.png",
-                                  )),
-                            ),
+                            // Positioned(
+                            //   bottom: 0,
+                            //   right: 0,
+                            //   child: Container(
+                            //       padding: EdgeInsets.all(5.5.h),
+                            //       height: 35.h,
+                            //       width: 35.w,
+                            //       decoration: BoxDecoration(
+                            //         color: Theme.of(context).colorScheme.primary,
+                            //         shape: BoxShape.circle,
+                            //       ),
+                            //       child: Image.asset(
+                            //         "assets/images/camera.png",
+                            //       )),
+                            // ),
                           ],
                         ),
                       ),

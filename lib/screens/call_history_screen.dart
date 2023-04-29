@@ -24,6 +24,7 @@ class CallHistoryScreen extends StatefulWidget {
 class _CallHistoryScreenState extends State<CallHistoryScreen> {
   CallHistoryController con = Get.put(CallHistoryController());
   BaseScreenController baseController = Get.find<BaseScreenController>();
+  final _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +97,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                     },
                     child: Container(
                       margin: EdgeInsets.only(right: 20.w, top: 10.h),
-                      child: Icon(Icons.more_vert, color: Color(0xff6B6F80), size: 22.sp),
+                      child: Icon(Icons.more_vert, color: const Color(0xff6B6F80), size: 22.sp),
                     ),
                   )
                 ],
@@ -118,7 +119,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
               body: SingleChildScrollView(
                 child: Container(
                     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Divider(
+                  const Divider(
                     height: 0,
                   ),
                   SizedBox(
@@ -137,17 +138,17 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                     labelPadding: EdgeInsets.symmetric(horizontal: 10.w),
                     labelColor: Theme.of(context).colorScheme.primary,
                     isScrollable: true, // add this property
-                    unselectedLabelColor: Color(0xff838799),
+                    unselectedLabelColor: const Color(0xff838799),
                     indicatorColor: Theme.of(context).colorScheme.primary,
                     indicatorSize: TabBarIndicatorSize.label,
 
                     indicatorPadding: EdgeInsets.only(bottom: 10.h),
                     labelStyle: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500),
                     tabs: [
-                      Tab(
+                      const Tab(
                         text: 'All',
                       ),
-                      Tab(
+                      const Tab(
                         text: 'Missed',
                       ),
                     ],
@@ -155,11 +156,13 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                   Container(
                       height: MediaQuery.of(context).size.height * 0.63,
                       child: TabBarView(children: [
-                        value.isLoading
-                            ? CallHistoryShimmer()
-                            : SingleChildScrollView(
+
+                        SingleChildScrollView(
+                                controller: con.scrollController,
                                 child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+
                                     value.todayCallHistory.length < 1
                                         ? Container()
                                         : Column(
@@ -182,7 +185,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                                                 ),
                                               ),
                                               ListView.builder(
-                                                physics: NeverScrollableScrollPhysics(),
+                                                physics: const NeverScrollableScrollPhysics(),
                                                 shrinkWrap: true,
                                                 itemCount: value.getDataList("today", false).length,
                                                 itemBuilder: (BuildContext context, int index) {
@@ -292,7 +295,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                                               ),
                                               ListView.builder(
                                                 shrinkWrap: true,
-                                                physics: NeverScrollableScrollPhysics(),
+                                                physics: const NeverScrollableScrollPhysics(),
                                                 itemCount: value.getDataList("yesterday", false).length,
                                                 itemBuilder: (BuildContext context, int index) {
                                                   return Container(
@@ -412,26 +415,18 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                                               ),
                                               ListView.builder(
                                                 shrinkWrap: true,
-                                                physics: NeverScrollableScrollPhysics(),
+                                                physics: const NeverScrollableScrollPhysics(),
                                                 itemCount: value.getDataList("earlier", false).length,
                                                 itemBuilder: (BuildContext context, int index) {
                                                   return Container(
                                                     child: ListTile(
                                                       dense: true,
                                                       leading: TextBox(
-                                                        text: value.getDataList("earlier", false)[index].name!.length ==
-                                                                3
-                                                            ? value
-                                                                .getDataList("earlier", false)[index]
-                                                                .name!
-                                                                .substring(0, 3)
-                                                            : value.getDataList("earlier", false)[index].name!.length ==
-                                                                    2
-                                                                ? value
-                                                                    .getDataList("earlier", false)[index]
-                                                                    .name!
-                                                                    .substring(0, 1)
-                                                                : value.getDataList("earlier", false)[index].name![0],
+                                                        text: value.getDataList("earlier", false)[index].name?.length == 3
+                                                            ? value.getDataList("earlier", false)[index].name!.substring(0, 3)
+                                                            : value.getDataList("earlier", false)[index].name?.length == 2
+                                                            ? value.getDataList("earlier", false)[index].name!.substring(0, 1)
+                                                            : value.getDataList("earlier", false)[index].name?.substring(0, 1) ?? '',
                                                       ),
                                                       subtitle: Container(
                                                         margin: EdgeInsets.only(top: 5.h),
@@ -491,7 +486,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                                                         ),
                                                       ),
                                                       title: Text(
-                                                        value.getDataList("earlier", false)[index].name!,
+                                                        value.getDataList("earlier", false)[index].name??"",
                                                         maxLines: 2,
                                                         style: TextStyle(
                                                             fontWeight: FontWeight.w600,
@@ -503,13 +498,14 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                                                 },
                                               ),
                                             ],
-                                          )
+                                          ),
+                                    value.isLoading ?const SizedBox(height:20 ,):const SizedBox(),
+                                    value.isLoading ? const CircularProgressIndicator():const SizedBox(),
+                                    value.isLoading ?const SizedBox(height:15,):const SizedBox(),
                                   ],
                                 ),
                               ),
-                        value.isLoading
-                            ? CallHistoryShimmer()
-                            : SingleChildScrollView(
+                        SingleChildScrollView(
                                 child: Column(
                                   children: [
                                     value.getDataList("today", true).length < 1
@@ -534,7 +530,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                                                 ),
                                               ),
                                               ListView.builder(
-                                                physics: NeverScrollableScrollPhysics(),
+                                                physics: const NeverScrollableScrollPhysics(),
                                                 shrinkWrap: true,
                                                 itemCount: value.getDataList("today", true).length,
                                                 itemBuilder: (BuildContext context, int index) {
@@ -643,7 +639,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                                               ),
                                               ListView.builder(
                                                 shrinkWrap: true,
-                                                physics: NeverScrollableScrollPhysics(),
+                                                physics: const NeverScrollableScrollPhysics(),
                                                 itemCount: value.getDataList("yesterday", true).length,
                                                 itemBuilder: (BuildContext context, int index) {
                                                   return Container(
@@ -762,7 +758,7 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                                               ),
                                               ListView.builder(
                                                 shrinkWrap: true,
-                                                physics: NeverScrollableScrollPhysics(),
+                                                physics: const NeverScrollableScrollPhysics(),
                                                 itemCount: value.getDataList("earlier", true).length,
                                                 itemBuilder: (BuildContext context, int index) {
                                                   return Container(
@@ -851,7 +847,10 @@ class _CallHistoryScreenState extends State<CallHistoryScreen> {
                                                 },
                                               ),
                                             ],
-                                          )
+                                          ),
+                                    value.isLoading ?const SizedBox(height:20 ,):const SizedBox(),
+                                    value.isLoading ? const CircularProgressIndicator():const SizedBox(),
+                                    value.isLoading ?const SizedBox(height:15,):const SizedBox(),
                                   ],
                                 ),
                               ),

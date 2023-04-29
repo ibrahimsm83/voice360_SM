@@ -127,4 +127,9 @@ class BaseScreenController extends GetxController implements SipUaHelperListener
       return null;
     }
   }
+
+  @override
+  void onNewNotify(Notify ntf) {
+    // TODO: implement onNewNotify
+  }
 }

@@ -5,6 +5,8 @@ import 'package:itp_voice/repo/call_history_repo.dart';
 import 'package:itp_voice/widgets/custom_loader.dart';
 import 'package:itp_voice/widgets/custom_toast.dart';
 
+int itemCount=0;
+int apiLimit=20;
 class CallHistoryController extends GetxController {
   bool isLoading = false;
   CallHistoryRepo repo = CallHistoryRepo();
@@ -12,12 +14,15 @@ class CallHistoryController extends GetxController {
   List<CallHistory> todayCallHistory = [];
   List<CallHistory> yesterdayCallHistory = [];
   TextEditingController searchController = TextEditingController();
+  int apiOffset=0;
+
+  late ScrollController scrollController;
   getCallHistory() async {
     DateTime todayDate = DateTime.now();
     isLoading = true;
 
     update();
-    final res = await repo.fetchCallHistory();
+    final res = await repo.fetchCallHistory( offSet: apiOffset);
     isLoading = false;
     update();
     if (res.runtimeType == String) {
@@ -25,7 +30,8 @@ class CallHistoryController extends GetxController {
       return;
     }
     if (res.runtimeType == List<CallHistory>) {
-      callHistoryList = res;
+      apiOffset=apiOffset+apiLimit;
+      callHistoryList.addAll(res) ;
 
       // for (int i = 0; i < callHistoryList.length; i++) {
       //   if (callHistoryList[0].time!.day == todayDate.day) {
@@ -38,7 +44,7 @@ class CallHistoryController extends GetxController {
           callHistoryList.removeAt(i);
         }
         if (callHistoryList[0].time!.day ==
-            DateTime.now().subtract(Duration(days: 1)).day) {
+            DateTime.now().subtract(const Duration(days: 1)).day) {
           yesterdayCallHistory.add(callHistoryList[i]);
           callHistoryList.removeAt(i);
         }
@@ -145,6 +151,12 @@ class CallHistoryController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    scrollController = ScrollController();
+    scrollController.addListener(() {
+      if (scrollController.position.pixels == scrollController.position.maxScrollExtent && apiLimit==itemCount) {
+        getCallHistory();
+      }
+    });
     getCallHistory();
   }
 }

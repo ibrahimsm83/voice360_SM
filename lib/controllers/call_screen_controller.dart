@@ -300,6 +300,11 @@ class CallScreenController extends GetxController implements SipUaHelperListener
       return "Ringing";
     }
   }
+
+  @override
+  void onNewNotify(Object ntf) {
+    // TODO: implement onNewNotify
+  }
 }
 
 class MyAudioHandler extends BaseAudioHandler

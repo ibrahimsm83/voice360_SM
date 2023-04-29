@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:itp_voice/controllers/call_history_controller.dart';
 import 'package:itp_voice/helpers/config.dart';
 import 'package:itp_voice/screens/add_new_contact.dart';
 import 'package:itp_voice/screens/base_screen.dart';
@@ -143,8 +144,8 @@ class Endpoints {
     return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension";
   }
 
-  static String GET_CALL_HISTORY(api_id) {
-    return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/cdr?paginate=true&page_size=10";
+  static String GET_CALL_HISTORY(api_id,offset) {
+    return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/cdr?limit=${apiLimit}&offset=${offset}";
   }
 
   static String VALIDATE_PHONE_NUMBER(api_id) {

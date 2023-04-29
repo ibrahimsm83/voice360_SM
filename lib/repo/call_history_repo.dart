@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:itp_voice/controllers/call_history_controller.dart';
 import 'package:itp_voice/models/call_history_model.dart';
 import 'package:itp_voice/models/get_contacts_reponse_model/get_contacts_reponse_model.dart';
 import 'package:itp_voice/models/get_contacts_reponse_model/user_contact.dart';
@@ -8,7 +11,7 @@ import 'package:itp_voice/routes.dart';
 import 'package:itp_voice/storage_keys.dart';
 
 class CallHistoryRepo {
-  fetchCallHistory() async {
+  fetchCallHistory({required int offSet}) async {
     List<CallHistory> callHistoryList = [];
     String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
     String? userId =
@@ -20,8 +23,10 @@ class CallHistoryRepo {
         SharedPreferencesMethod.storage.getString(StorageKeys.EXTENTION)!;
     try {
       final apiResponse = await BaseRequesterMethods.baseRequester
-          .baseGetAPI(Endpoints.GET_CALL_HISTORY(apiId));
+          .baseGetAPI(Endpoints.GET_CALL_HISTORY(apiId,offSet));
       if (!apiResponse['errors']) {
+        itemCount=apiResponse['item_count'];
+        log('item count new value $itemCount');
         Map<String, dynamic> calls =
             apiResponse['result'] as Map<String, dynamic>;
         for (int i = 0; i < calls.keys.length; i++) {
