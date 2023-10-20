@@ -19,13 +19,14 @@ class ContactsController extends GetxController {
   List<Contact> unfilteredData = [];
   List<AlphabetListViewItemGroup> contacts = [];
   TextEditingController searchController = TextEditingController();
-  RxInt conOffSet=0.obs,totalPages=0.obs,currentPage=0.obs;
+  RxInt conOffSet=0.obs,totalPages=0.obs,currentPage=0.obs,totalCount=0.obs;
 
   fetchContacts(String offSet) async {
     if(offSet == '0') {
       unfilteredData.clear();
       conOffSet.value=0;
       totalPages.value=0;
+      totalCount.value=0;
       currentPage.value=0;
       isContactsLoading = true;
     }
@@ -36,10 +37,11 @@ class ContactsController extends GetxController {
     print("~~~~~~~~~~~~~~~~${res.runtimeType}~~~~~~~~~~~~~~~${res.runtimeType}");
 
     if (res.runtimeType == ContactResponse) {
-      print("**************INIT DATA ${unfilteredData.length}");
+      print("**************INIT DATA ${unfilteredData.length}  ");
       ContactResponse model = res;
-
+      print("**************TOTAL DATA ${model.itemCount!}  ");
       totalPages.value=model.totalPages!;
+      totalCount.value=model.itemCount!;
       currentPage.value = 1 + currentPage.value ;
       conOffSet.value=conOffSet.value+20;
 
@@ -73,6 +75,7 @@ class ContactsController extends GetxController {
       conOffSet.value=0;
       totalPages.value=0;
       currentPage.value=0;
+      totalCount.value=0;
       isContactsLoading = true;
     }
 
@@ -86,6 +89,7 @@ class ContactsController extends GetxController {
       ContactResponse model = res;
 
       totalPages.value=model.totalPages!;
+      totalCount.value=model.itemCount!;
       currentPage.value = 1 + currentPage.value ;
       conOffSet.value=conOffSet.value+20;
 

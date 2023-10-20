@@ -263,10 +263,10 @@ class _ContactsScreenState extends State<ContactsScreen> {
                             fontSize: 15.sp, fontWeight: FontWeight.w500),
                         tabs: [
                           Tab(
-                            text: 'Contacts (${con.getDataList().length})',
+                            text: 'Contacts',
                           ),
                           Tab(
-                            text: 'Contact Lists ',
+                            text: 'Contact Lists (${con.totalCount})',
                           ),
                         ],
                       ),
@@ -290,16 +290,14 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                   con.getDataList()[index]);
                                             },
                                             child: Container(
-                                              margin: EdgeInsets.symmetric(
+                                              padding: EdgeInsets.symmetric(
                                                   vertical: 10.h,
                                                   horizontal: 10.w),
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.max,
                                                 children: [
                                                   TextBox(
-                                                    text: con
-                                                        .getDataList()[index]
-                                                        .firstname![0],
+                                                    text:"${con.getDataList()[index].firstname![0]}" ,
                                                   ),
                                                   SizedBox(width: 15.w),
                                                   Container(
@@ -318,7 +316,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
                                                               Text(
                                                                 "${con
                                                                     .getDataList()[index]
-                                                                    .firstname!}",
+                                                                    .firstname!} ${con
+                                                                    .getDataList()[index]
+                                                                    .lastname!}",
                                                                 // style: ts(1, 0xff1B1A57, 14.sp, 5),
                                                                 maxLines: 2,
                                                                 style: TextStyle(

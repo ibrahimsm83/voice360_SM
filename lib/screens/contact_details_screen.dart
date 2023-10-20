@@ -168,7 +168,7 @@ class _ContactDetailsScreenState extends State<ContactDetailsScreen> {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        contact!.firstname!,
+                        "${contact!.firstname} ${contact!.lastname}",
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
