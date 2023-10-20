@@ -76,6 +76,22 @@ final List<AlphabetListViewItemGroup> animals = [
 
 class _ContactsScreenState extends State<ContactsScreen> {
   ContactsController con = Get.put(ContactsController());
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    con.fetchContacts('0',);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        if (con.totalPages.value > con.currentPage.value) {
+          con.fetchContacts(con.conOffSet.value.toString());
+        }
+      }
+    });
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +242,9 @@ class _ContactsScreenState extends State<ContactsScreen> {
                       Searchbar(
                         controller: value.searchController,
                         onChanged: (val) {
-                          value.update();
+                          print('-------->>>>$val');
+                          con.searchContacts("0".toString(),val);
+                          // value.update();
                         },
                       ),
                       SizedBox(
@@ -245,10 +263,10 @@ class _ContactsScreenState extends State<ContactsScreen> {
                             fontSize: 15.sp, fontWeight: FontWeight.w500),
                         tabs: [
                           Tab(
-                            text: 'Contacts',
+                            text: 'Contacts (${con.getDataList().length})',
                           ),
                           Tab(
-                            text: 'Groups',
+                            text: 'Contact Lists ',
                           ),
                         ],
                       ),
@@ -258,68 +276,89 @@ class _ContactsScreenState extends State<ContactsScreen> {
                             value.isContactsLoading
                                 ? ContactListShimmer()
                                 : ListView.builder(
-                                    itemCount: con.getDataList().length,
+                                    controller: _scrollController,
+                                    itemCount: con.getDataList().length+1,
                                     itemBuilder: (context, index) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          Get.toNamed(
-                                              Routes
-                                                  .CONTACT_DETAIS_SCREEN_ROUTE,
-                                              arguments:
+                                      if (index < con.getDataList().length) {
+                                        return
+                                          GestureDetector(
+                                            onTap: () {
+                                              Get.toNamed(
+                                                  Routes
+                                                      .CONTACT_DETAIS_SCREEN_ROUTE,
+                                                  arguments:
                                                   con.getDataList()[index]);
-                                        },
-                                        child: Container(
-                                          margin: EdgeInsets.symmetric(
-                                              vertical: 10.h, horizontal: 10.w),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              TextBox(
-                                                text: con
-                                                    .getDataList()[index]
-                                                    .firstname![0],
-                                              ),
-                                              SizedBox(width: 15.w),
-                                              Container(
-                                                  alignment:
+                                            },
+                                            child: Container(
+                                              margin: EdgeInsets.symmetric(
+                                                  vertical: 10.h,
+                                                  horizontal: 10.w),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.max,
+                                                children: [
+                                                  TextBox(
+                                                    text: con
+                                                        .getDataList()[index]
+                                                        .firstname![0],
+                                                  ),
+                                                  SizedBox(width: 15.w),
+                                                  Container(
+                                                      alignment:
                                                       Alignment.centerLeft,
-                                                  child: Column(
-                                                    mainAxisAlignment:
+                                                      child: Column(
+                                                        mainAxisAlignment:
                                                         MainAxisAlignment
                                                             .center,
-                                                    crossAxisAlignment:
+                                                        crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
-                                                    children: [
-                                                      Row(
                                                         children: [
-                                                          Text(
-                                                            "${con.getDataList()[index].firstname!}",
-                                                            // style: ts(1, 0xff1B1A57, 14.sp, 5),
-                                                            maxLines: 2,
-                                                            style: TextStyle(
-                                                              fontWeight:
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                "${con
+                                                                    .getDataList()[index]
+                                                                    .firstname!}",
+                                                                // style: ts(1, 0xff1B1A57, 14.sp, 5),
+                                                                maxLines: 2,
+                                                                style: TextStyle(
+                                                                  fontWeight:
                                                                   FontWeight
                                                                       .w600,
-                                                              fontSize: 15.sp,
-                                                              overflow:
+                                                                  fontSize: 15
+                                                                      .sp,
+                                                                  overflow:
                                                                   TextOverflow
                                                                       .ellipsis,
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 5.w,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 5.w,
+                                                              ),
+                                                            ],
                                                           ),
                                                         ],
-                                                      ),
-                                                    ],
-                                                  ))
+                                                      ))
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                      }else{
+                                       return con.totalPages.value > con.currentPage.value
+                                            ? const Center(
+                                          child: Column(
+                                            children: [
+                                              SizedBox(height: 20),
+                                              CircularProgressIndicator(),
+                                              SizedBox(height: 60),
                                             ],
                                           ),
-                                        ),
-                                      );
+                                        )
+                                            : const SizedBox();
+                                      }
                                     }),
-                            ListView.builder(itemBuilder: (context, index) {
+                            ListView.builder(
+                                itemBuilder: (context, index) {
                               return Container(
                                 margin: EdgeInsets.symmetric(
                                     vertical: 10.h, horizontal: 0.w),

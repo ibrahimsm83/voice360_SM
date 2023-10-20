@@ -133,7 +133,7 @@ class AddNewContactController extends GetxController {
         if (res) {
           Get.back();
           CustomToast.showToast("New contact created successfully", false);
-          contactsController.fetchContacts();
+          contactsController.fetchContacts('0',);
           return;
         }
       } catch (e) {

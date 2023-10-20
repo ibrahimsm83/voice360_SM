@@ -19,16 +19,31 @@ class ContactsController extends GetxController {
   List<Contact> unfilteredData = [];
   List<AlphabetListViewItemGroup> contacts = [];
   TextEditingController searchController = TextEditingController();
+  RxInt conOffSet=0.obs,totalPages=0.obs,currentPage=0.obs;
 
-  fetchContacts() async {
-    unfilteredData.clear();
-    isContactsLoading = true;
+  fetchContacts(String offSet) async {
+    if(offSet == '0') {
+      unfilteredData.clear();
+      conOffSet.value=0;
+      totalPages.value=0;
+      currentPage.value=0;
+      isContactsLoading = true;
+    }
+
     update();
-    final res = await repo.getContacts();
+    final res = await repo.getContacts(offSet,);
     isContactsLoading = false;
+    print("~~~~~~~~~~~~~~~~${res.runtimeType}~~~~~~~~~~~~~~~${res.runtimeType}");
 
     if (res.runtimeType == ContactResponse) {
+      print("**************INIT DATA ${unfilteredData.length}");
       ContactResponse model = res;
+
+      totalPages.value=model.totalPages!;
+      currentPage.value = 1 + currentPage.value ;
+      conOffSet.value=conOffSet.value+20;
+
+
       if (model.result!.isNotEmpty) {
         for (int i = 0; i < Helpers.alphabet.length; i++) {
           filteredData.putIfAbsent(Helpers.alphabet[i], () => [""]);
@@ -45,6 +60,53 @@ class ContactsController extends GetxController {
         }
         print("FILTERED DATA");
         print(filteredData);
+        print("**************END FUNCTION CALL API DATA ${unfilteredData.length}");
+      }
+    }
+    generateWidgetList();
+    update();
+  }
+
+  searchContacts(String offSet,String query) async {
+    if(offSet == '0') {
+      unfilteredData.clear();
+      conOffSet.value=0;
+      totalPages.value=0;
+      currentPage.value=0;
+      isContactsLoading = true;
+    }
+
+    update();
+    final res = await repo.searchContacts(offSet,query);
+    isContactsLoading = false;
+    print("~~~~~~~~~~~~~~~~${res.runtimeType}~~~~~~~~~~~~~~~${res.runtimeType}");
+
+    if (res.runtimeType == ContactResponse) {
+      print("**************INIT DATA ${unfilteredData.length}");
+      ContactResponse model = res;
+
+      totalPages.value=model.totalPages!;
+      currentPage.value = 1 + currentPage.value ;
+      conOffSet.value=conOffSet.value+20;
+
+
+      if (model.result!.isNotEmpty) {
+        for (int i = 0; i < Helpers.alphabet.length; i++) {
+          filteredData.putIfAbsent(Helpers.alphabet[i], () => [""]);
+          for (int j = 0; j < model.result!.length; j++) {
+            if (Helpers.alphabet[i] ==
+                model.result![j].firstname![0].toLowerCase()) {
+              filteredData[Helpers.alphabet[i]]!.add(
+                  model.result![j].firstname.toString() +
+                      model.result![j].pk.toString());
+
+              unfilteredData.add(model.result![j]);
+            }
+          }
+        }
+        print("FILTERED DATA");
+        print(filteredData);
+        print("**************END FUNCTION CALL API DATA ${unfilteredData.length}");
       }
     }
     generateWidgetList();
@@ -241,11 +303,11 @@ class ContactsController extends GetxController {
     //   contacts.map((e) => item);
     // }
   }
-
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-    fetchContacts();
-  }
+  //
+  // @override
+  // void onInit() {
+  //   // TODO: implement onInit
+  //   super.onInit();
+  //   fetchContacts();
+  // }
 }

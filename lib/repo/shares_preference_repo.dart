@@ -18,9 +18,17 @@ class SharedPreferencesMethod {
     storage.setBool(key, value);
   }
 
+  static bool? getBool(
+      key,
+      ) {
+    bool? data = storage.getBool(key);
+    return data;
+  }
+
   static Future<void> setString(key, value) async {
     storage.setString(key, value);
   }
+
 
   static String? getString(
     key,

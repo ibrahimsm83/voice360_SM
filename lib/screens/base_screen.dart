@@ -90,7 +90,7 @@ class BaseScreen extends StatelessWidget {
                             ? Theme.of(context).colorScheme.primary
                             : Color(0xffA6B0CF),
                       ),
-                      label: ('Voicemail'),
+                      label: ('My Voicemails'),
                     ),
                     BottomNavigationBarItem(
                       icon: Image.asset(

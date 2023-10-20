@@ -50,15 +50,15 @@ class ContactsRepo {
     }
   }
 
-  getContacts() async {
+  getContacts(String offSet,) async {
     String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
 
     try {
       final apiResponse = await BaseRequesterMethods.baseRequester.baseGetAPI(
-        Endpoints.GET_CONTACTS_URL(apiId),
+        Endpoints.GET_CONTACTS_URL(apiId,offSet),
       );
 
-      if (apiResponse['errors'] /*!apiResponse['errors']*/) {
+      if (apiResponse['errors'] ==false) {
         ContactResponse reponse = ContactResponse.fromJson(apiResponse);
         // GetContactsReponseModel reponse =
         //     GetContactsReponseModel.fromMap(apiResponse);
@@ -70,7 +70,26 @@ class ContactsRepo {
       return "Something went wrong";
     }
   }
+  searchContacts(String offSet,String query) async {
+    String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
 
+    try {
+      final apiResponse = await BaseRequesterMethods.baseRequester.baseGetAPI(
+        Endpoints.SEARCH_CONTACTS_URL(apiId,offSet,query),
+      );
+
+      if (apiResponse['errors'] ==false) {
+        ContactResponse reponse = ContactResponse.fromJson(apiResponse);
+        // GetContactsReponseModel reponse =
+        //     GetContactsReponseModel.fromMap(apiResponse);
+        return reponse;
+      }
+      return "Something went wrong";
+    } catch (e) {
+      print(e.toString());
+      return "Something went wrong";
+    }
+  }
   deleteContact(id) async {
     String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
 

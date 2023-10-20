@@ -111,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height: 30.h,
                               ),
                               Image.asset(
-                                "assets/images/itp_white.png",
+                                "assets/images/logo_white.png",
                                 width: 120.w,
                               ),
                               SizedBox(
@@ -233,7 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       )
-                    : Container(child: Image.asset("assets/images/itp_white.png")),
+                    : Container(child: Image.asset("assets/images/logo_white.png")),
               ),
             ],
           ),

@@ -32,6 +32,7 @@ class LoginController extends GetxController {
         passwordController.text,
         isRemember.value,
       );
+      print("***********${res.toString()}");
       Get.back();
       if (res.runtimeType == String) {
         CustomToast.showToast(res.toString(), true);

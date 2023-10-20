@@ -14,6 +14,7 @@ class ChatInfoController extends GetxController {
   String phone = Get.arguments;
   ContactsRepo repo = ContactsRepo();
   RxBool isLoading = false.obs;
+  RxInt limit=0.obs,offSet=0.obs,totalContacts=0.obs;
 
   addContact() async {
     if (fullNameController.text.isEmpty || fullNameController.text == null) {
@@ -32,9 +33,10 @@ class ChatInfoController extends GetxController {
       }
       if (res) {
         CustomToast.showToast("New contact created successfully", false);
-        contactsController.fetchContacts();
+
+        contactsController.fetchContacts('0',);
         try {
-          final res = await repo.getContacts();
+          final res = await repo.getContacts('0',);
           if (res.runtimeType == ContactResponse) {
             for (Contact contact in (res as ContactResponse).result ?? <Contact>[]) {
               if (contact.phone == phone) {
@@ -71,9 +73,10 @@ class ChatInfoController extends GetxController {
       }
       if (res) {
         CustomToast.showToast("Updated Contact successfully", false);
-        contactsController.fetchContacts();
+
+        contactsController.fetchContacts('0',);
         try {
-          final res = await repo.getContacts();
+          final res = await repo.getContacts('0');
           if (res.runtimeType == ContactResponse) {
             for (Contact contact in (res as ContactResponse).result ?? <Contact>[]) {
               if (contact.phone == phone) {
@@ -97,7 +100,7 @@ class ChatInfoController extends GetxController {
   void onInit() async {
     isLoading.value = true;
     try {
-      final res = await repo.getContacts();
+      final res = await repo.getContacts("0");
       if (res.runtimeType == ContactResponse) {
         for (Contact contact in (res as ContactResponse).result ?? <Contact>[]) {
           if (contact.phone == phone) {

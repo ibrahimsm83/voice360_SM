@@ -3,8 +3,17 @@ class ContactResponse {
   bool? errors;
   dynamic error;
   String? message;
+  bool? portalResponse;
+  int? offset;
+  int? itemsPerPage;
+  int? totalPages;
+  int? itemCount;
 
-  ContactResponse({this.result, this.errors, this.error, this.message});
+  ContactResponse({this.result, this.errors, this.error, this.message,this.portalResponse,
+    this.offset,
+    this.itemsPerPage,
+    this.totalPages,
+    this.itemCount});
 
   ContactResponse.fromJson(Map<String, dynamic> json) {
     if (json['result'] != null) {
@@ -16,6 +25,11 @@ class ContactResponse {
     errors = json['errors'];
     error = json['error'];
     message = json['message'];
+    portalResponse = json['portal_response'];
+    offset = json['offset'];
+    itemsPerPage = json['items_per_page'];
+    totalPages = json['total_pages'];
+    itemCount = json['item_count'];
   }
 
   Map<String, dynamic> toJson() {
@@ -26,6 +40,11 @@ class ContactResponse {
     data['errors'] = this.errors;
     data['error'] = this.error;
     data['message'] = this.message;
+    data['portal_response'] = this.portalResponse;
+    data['offset'] = this.offset;
+    data['items_per_page'] = this.itemsPerPage;
+    data['total_pages'] = this.totalPages;
+    data['item_count'] = this.itemCount;
     return data;
   }
 }

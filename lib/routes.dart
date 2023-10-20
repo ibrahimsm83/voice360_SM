@@ -119,9 +119,13 @@ class Endpoints {
     return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/contacts";
   }
 
-  static String GET_CONTACTS_URL(api_id) {
-    return 'https://api.itpscorp.com/portal/360/accounts/${api_id}/my-account/contacts';
+  static String GET_CONTACTS_URL(api_id,offSet) {
+    return 'https://api.itpscorp.com/portal/360/accounts/${api_id}/my-account/contacts?offset=$offSet&limit=20';
     return Config.BASE_URL_ITP_VOICE + "${api_id}/my-extension/contacts?unlimit=true";
+  }
+
+  static String SEARCH_CONTACTS_URL(api_id,offSet,query) {
+    return 'https://api.itpscorp.com/portal/360/accounts/${api_id}/my-account/contacts?offset=$offSet&limit=20&firstname=$query&lastname=$query';
   }
 
   static String GET_VOICE_MAILS_URL(api_id) {

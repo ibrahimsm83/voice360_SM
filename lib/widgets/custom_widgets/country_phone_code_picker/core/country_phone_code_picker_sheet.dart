@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:itp_voice/widgets/custom_widgets/country_phone_code_picker/constants/country_flag_image.dart';
 import 'package:itp_voice/widgets/custom_widgets/country_phone_code_picker/controller/country_controller.dart';
-import 'package:itp_voice/widgets/custom_widgets/country_phone_code_picker/controller/search_controller.dart';
+import 'package:itp_voice/widgets/custom_widgets/country_phone_code_picker/controller/search_controller.dart' as sc;
 
 // ignore: must_be_immutable
 class CountryPhoneCodePickerModalSheet extends StatelessWidget {
@@ -113,7 +113,7 @@ class CountryPhoneCodePickerModalSheet extends StatelessWidget {
   //show cursor if the value is set to true
   bool showCursor;
 
-  SearchController searchController = Get.put(SearchController());
+  sc.SearchController searchController = Get.put(sc.SearchController());
   CountryController countryController =
       Get.put<CountryController>(CountryController());
   @override
@@ -174,7 +174,7 @@ class CountryPhoneCodePickerModalSheet extends StatelessWidget {
               showCursor: showCursor,
             ),
             Expanded(
-              child: GetBuilder<SearchController>(
+              child: GetBuilder<sc.SearchController>(
                 builder: (controller) {
                   return ListView.builder(
                     itemCount: controller.filteredCountries.length,

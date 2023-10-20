@@ -152,7 +152,7 @@ class EditContactController extends GetxController {
         if (res) {
           Get.back();
           CustomToast.showToast("Contact updated successfully", false);
-          contactsController.fetchContacts();
+          contactsController.fetchContacts('0',);
           return;
         }
       } catch (e) {

@@ -200,65 +200,65 @@ class AddNewContactScreen extends StatelessWidget {
                                             ),
                                     ],
                                   ),
-                                  Container(
-                                    // height: 30.h,
-                                    child: ChipsChoice<int>.single(
-                                      padding: EdgeInsets.symmetric(vertical: 0.h),
-                                      choiceActiveStyle: C2ChoiceStyle(
-                                        borderWidth: 0,
-                                        showCheckmark: false,
-                                        labelPadding: EdgeInsets.symmetric(
-                                          horizontal: 10.w,
-                                          vertical: 01,
-                                        ),
-                                        margin: EdgeInsets.zero,
-                                        labelStyle: TextStyle(
-                                          fontSize: 14.sp,
-                                          color: Theme.of(context).colorScheme.primary,
-                                        ),
-                                        borderColor: Colors.transparent,
-                                        color: Colors.white,
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 2.w,
-                                          vertical: 0.002,
-                                        ),
-                                        backgroundColor: Colors.transparent,
-                                        borderRadius: BorderRadius.all(Radius.circular(500)),
-                                      ),
-                                      alignment: WrapAlignment.start,
-                                      choiceStyle: C2ChoiceStyle(
-                                        borderWidth: 0,
-                                        showCheckmark: false,
-                                        labelPadding: EdgeInsets.symmetric(
-                                          horizontal: 10.w,
-                                          vertical: 0.001,
-                                        ),
-                                        labelStyle:
-                                            TextStyle(fontSize: 14.sp, color: AppTheme.colors(context)?.textColor),
-                                        borderColor: Colors.transparent,
-                                        color: Colors.white,
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 2.w,
-                                          vertical: 0.002,
-                                        ),
-                                        backgroundColor: Theme.of(context).colorScheme.tertiary.withOpacity(0),
-                                        borderRadius: BorderRadius.all(Radius.circular(500)),
-                                      ),
-                                      wrapped: true,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.max,
-                                      value: value.contactFieldsData[index]['selectedLabel'],
-                                      onChanged: (val) {
-                                        value.contactFieldsData[index]['selectedLabel'] = val;
-                                        value.update();
-                                      },
-                                      choiceItems: C2Choice.listFrom<int, String>(
-                                        source: value.contactFieldsData[index]['labelOptions'],
-                                        value: (i, v) => i,
-                                        label: (i, v) => v,
-                                      ),
-                                    ),
-                                  ),
+                                  // Container(
+                                  //   // height: 30.h,
+                                  //   child: ChipsChoice<int>.single(
+                                  //     padding: EdgeInsets.symmetric(vertical: 0.h),
+                                  //     choiceActiveStyle: C2ChoiceStyle(
+                                  //       borderWidth: 0,
+                                  //       showCheckmark: false,
+                                  //       labelPadding: EdgeInsets.symmetric(
+                                  //         horizontal: 10.w,
+                                  //         vertical: 01,
+                                  //       ),
+                                  //       margin: EdgeInsets.zero,
+                                  //       labelStyle: TextStyle(
+                                  //         fontSize: 14.sp,
+                                  //         color: Theme.of(context).colorScheme.primary,
+                                  //       ),
+                                  //       borderColor: Colors.transparent,
+                                  //       color: Colors.white,
+                                  //       padding: EdgeInsets.symmetric(
+                                  //         horizontal: 2.w,
+                                  //         vertical: 0.002,
+                                  //       ),
+                                  //       backgroundColor: Colors.transparent,
+                                  //       borderRadius: BorderRadius.all(Radius.circular(500)),
+                                  //     ),
+                                  //     alignment: WrapAlignment.start,
+                                  //     choiceStyle: C2ChoiceStyle(
+                                  //       borderWidth: 0,
+                                  //       showCheckmark: false,
+                                  //       labelPadding: EdgeInsets.symmetric(
+                                  //         horizontal: 10.w,
+                                  //         vertical: 0.001,
+                                  //       ),
+                                  //       labelStyle:
+                                  //           TextStyle(fontSize: 14.sp, color: AppTheme.colors(context)?.textColor),
+                                  //       borderColor: Colors.transparent,
+                                  //       color: Colors.white,
+                                  //       padding: EdgeInsets.symmetric(
+                                  //         horizontal: 2.w,
+                                  //         vertical: 0.002,
+                                  //       ),
+                                  //       backgroundColor: Theme.of(context).colorScheme.tertiary.withOpacity(0),
+                                  //       borderRadius: BorderRadius.all(Radius.circular(500)),
+                                  //     ),
+                                  //     wrapped: true,
+                                  //     mainAxisAlignment: MainAxisAlignment.start,
+                                  //     mainAxisSize: MainAxisSize.max,
+                                  //     value: value.contactFieldsData[index]['selectedLabel'],
+                                  //     onChanged: (val) {
+                                  //       value.contactFieldsData[index]['selectedLabel'] = val;
+                                  //       value.update();
+                                  //     },
+                                  //     choiceItems: C2Choice.listFrom<int, String>(
+                                  //       source: value.contactFieldsData[index]['labelOptions'],
+                                  //       value: (i, v) => i,
+                                  //       label: (i, v) => v,
+                                  //     ),
+                                  //   ),
+                                  // ),
                                   SizedBox(
                                     height: 5.h,
                                   ),
@@ -371,65 +371,65 @@ class AddNewContactScreen extends StatelessWidget {
                                             ),
                                     ],
                                   ),
-                                  Container(
-                                    // height: 30.h,
-                                    child: ChipsChoice<int>.single(
-                                      padding: EdgeInsets.symmetric(vertical: 0.h),
-                                      choiceActiveStyle: C2ChoiceStyle(
-                                        borderWidth: 0,
-                                        showCheckmark: false,
-                                        labelPadding: EdgeInsets.symmetric(
-                                          horizontal: 10.w,
-                                          vertical: 01,
-                                        ),
-                                        margin: EdgeInsets.zero,
-                                        labelStyle: TextStyle(
-                                          fontSize: 14.sp,
-                                          color: Theme.of(context).colorScheme.primary,
-                                        ),
-                                        borderColor: Colors.transparent,
-                                        color: Colors.white,
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 2.w,
-                                          vertical: 0.002,
-                                        ),
-                                        backgroundColor: Colors.transparent,
-                                        borderRadius: BorderRadius.all(Radius.circular(500)),
-                                      ),
-                                      alignment: WrapAlignment.start,
-                                      choiceStyle: C2ChoiceStyle(
-                                        borderWidth: 0,
-                                        showCheckmark: false,
-                                        labelPadding: EdgeInsets.symmetric(
-                                          horizontal: 10.w,
-                                          vertical: 0.001,
-                                        ),
-                                        labelStyle:
-                                            TextStyle(fontSize: 14.sp, color: AppTheme.colors(context)?.textColor),
-                                        borderColor: Colors.transparent,
-                                        color: Colors.white,
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 2.w,
-                                          vertical: 0.002,
-                                        ),
-                                        backgroundColor: Theme.of(context).colorScheme.tertiary.withOpacity(0),
-                                        borderRadius: BorderRadius.all(Radius.circular(500)),
-                                      ),
-                                      wrapped: true,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.max,
-                                      value: value.emailFieldsData[index]['selectedLabel'],
-                                      onChanged: (val) {
-                                        value.emailFieldsData[index]['selectedLabel'] = val;
-                                        value.update();
-                                      },
-                                      choiceItems: C2Choice.listFrom<int, String>(
-                                        source: value.emailFieldsData[index]['labelOptions'],
-                                        value: (i, v) => i,
-                                        label: (i, v) => v,
-                                      ),
-                                    ),
-                                  ),
+                                  // Container(
+                                  //   // height: 30.h,
+                                  //   child: ChipsChoice<int>.single(
+                                  //     padding: EdgeInsets.symmetric(vertical: 0.h),
+                                  //     choiceActiveStyle: C2ChoiceStyle(
+                                  //       borderWidth: 0,
+                                  //       showCheckmark: false,
+                                  //       labelPadding: EdgeInsets.symmetric(
+                                  //         horizontal: 10.w,
+                                  //         vertical: 01,
+                                  //       ),
+                                  //       margin: EdgeInsets.zero,
+                                  //       labelStyle: TextStyle(
+                                  //         fontSize: 14.sp,
+                                  //         color: Theme.of(context).colorScheme.primary,
+                                  //       ),
+                                  //       borderColor: Colors.transparent,
+                                  //       color: Colors.white,
+                                  //       padding: EdgeInsets.symmetric(
+                                  //         horizontal: 2.w,
+                                  //         vertical: 0.002,
+                                  //       ),
+                                  //       backgroundColor: Colors.transparent,
+                                  //       borderRadius: BorderRadius.all(Radius.circular(500)),
+                                  //     ),
+                                  //     alignment: WrapAlignment.start,
+                                  //     choiceStyle: C2ChoiceStyle(
+                                  //       borderWidth: 0,
+                                  //       showCheckmark: false,
+                                  //       labelPadding: EdgeInsets.symmetric(
+                                  //         horizontal: 10.w,
+                                  //         vertical: 0.001,
+                                  //       ),
+                                  //       labelStyle:
+                                  //           TextStyle(fontSize: 14.sp, color: AppTheme.colors(context)?.textColor),
+                                  //       borderColor: Colors.transparent,
+                                  //       color: Colors.white,
+                                  //       padding: EdgeInsets.symmetric(
+                                  //         horizontal: 2.w,
+                                  //         vertical: 0.002,
+                                  //       ),
+                                  //       backgroundColor: Theme.of(context).colorScheme.tertiary.withOpacity(0),
+                                  //       borderRadius: BorderRadius.all(Radius.circular(500)),
+                                  //     ),
+                                  //     wrapped: true,
+                                  //     mainAxisAlignment: MainAxisAlignment.start,
+                                  //     mainAxisSize: MainAxisSize.max,
+                                  //     value: value.emailFieldsData[index]['selectedLabel'],
+                                  //     onChanged: (val) {
+                                  //       value.emailFieldsData[index]['selectedLabel'] = val;
+                                  //       value.update();
+                                  //     },
+                                  //     choiceItems: C2Choice.listFrom<int, String>(
+                                  //       source: value.emailFieldsData[index]['labelOptions'],
+                                  //       value: (i, v) => i,
+                                  //       label: (i, v) => v,
+                                  //     ),
+                                  //   ),
+                                  // ),
                                   SizedBox(
                                     height: 5.h,
                                   ),
