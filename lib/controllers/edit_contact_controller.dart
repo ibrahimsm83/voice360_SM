@@ -41,7 +41,7 @@ class EditContactController extends GetxController {
   ];
   List<Map<String, dynamic>> contactFieldsData = [];
   List<Map<String, dynamic>> emailFieldsData = [];
-  TextEditingController get fullNameController => TextEditingController(text: contact!.firstname!);
+  TextEditingController get fullNameController => TextEditingController(text: "${contact!.firstname!} ${contact!.lastname}");
 
   @override
   void onInit() {

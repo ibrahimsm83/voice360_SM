@@ -94,16 +94,17 @@ class ContactsRepo {
     String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
 
     try {
+      print("_________$apiId **$id");
       final apiResponse = await BaseRequesterMethods.baseRequester.baseDeleteAPI(
         Endpoints.DELETE_CONTACT(apiId) + "/$id",
         null,
         protected: true,
       );
 
-      if (!apiResponse['errors']) {
+      if (apiResponse['error']==null) {
         return true;
       }
-      return "Something went wrong";
+      return apiResponse['message'];
     } catch (e) {
       print(e.toString());
       return "Something went wrong";
