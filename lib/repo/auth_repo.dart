@@ -138,19 +138,24 @@ class AuthRepo {
     print('DEVICE TOKEN: ' + loginBody['mobile_device_id'].toString());
     final apiResponse = await BaseRequesterMethods.baseRequester
         .basePostAPI(Endpoints.LOGIN_URL, jsonEncode(loginBody), protected: false);
+    print("--------api response---------");
+    print(apiResponse.toString());
     if (apiResponse != null) {
       try {
         if (apiResponse['errors']) {
           return apiResponse['message'];
         } else {
+          print("--------api response-----1----");
           LoginReponseModel response = LoginReponseModel.fromMap(apiResponse);
           SharedPreferencesMethod.setString(StorageKeys.REFRESH_TOKEN, response.result!.refreshToken);
           SharedPreferencesMethod.setString(StorageKeys.TIME_ZONE, response.result!.timeZone);
           final devicesApiResponse = await getDevices();
           if (devicesApiResponse.runtimeType == String) {
+            print("--------api response-----2----");
             SharedPreferencesMethod.storage.remove(StorageKeys.REFRESH_TOKEN);
             return devicesApiResponse;
           } else if (devicesApiResponse) {
+            print("--------api response-----3----");
             var userIdApiResponse = await getUserID();
             if (userIdApiResponse.runtimeType == String) {
               SharedPreferencesMethod.storage.remove(StorageKeys.REFRESH_TOKEN);
@@ -158,13 +163,16 @@ class AuthRepo {
               return userIdApiResponse;
             }
             if (userIdApiResponse) {
+              print("--------api response-----4----");
               SharedPreferencesMethod.setString(StorageKeys.ACCESS_TOKEN, response.result!.accessToken);
               SharedPreferencesMethod.setbool(StorageKeys.REMEMBER, rememberMe);
 
               if (rememberMe) {
+                print("--------api response-----5----");
                 SharedPreferencesMethod.setString(StorageKeys.EMAIL, email);
                 SharedPreferencesMethod.setString(StorageKeys.PASSWORD, password);
               } else {
+                print("--------api response-----6----");
                 SharedPreferencesMethod.storage.remove(StorageKeys.EMAIL);
                 SharedPreferencesMethod.storage.remove(StorageKeys.PASSWORD);
               }
@@ -249,9 +257,12 @@ class AuthRepo {
   }
 
   getRealm() async {
+    print("''''========getRealm line 260 auth repo--'1---'");
     String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
+    print("''''========getRealm line 260 auth repo--''2----'${apiId}'");
 
     final apiResponse = await BaseRequesterMethods.baseRequester.baseGetAPI(Endpoints.GET_ACCOUNT_DETAILS(apiId));
+    print("''''========getRealm line 260 auth repo--''3----'${apiResponse}'");
     if (!apiResponse['errors']) {
       SharedPreferencesMethod.storage.setString(StorageKeys.REALM, apiResponse['result']['realm']);
       return true;
@@ -303,15 +314,20 @@ class AuthRepo {
   }
 
   getDevices() async {
+    print("''''========get devices line 314 auth repo--''1---''");
     final servicesApiResponse = await getServices();
+    print("''''========get devices line 314 auth repo--''2----''");
     if (servicesApiResponse.runtimeType == String) {
       return servicesApiResponse;
     }
     if (servicesApiResponse) {
+      print("''''========get devices line 314 auth repo--''3----'${servicesApiResponse}'");
       final realmApiResponse = await getRealm();
+      print("''''========get devices line 314 auth repo--''333----''");
       if (realmApiResponse.runtimeType == String) {
         return realmApiResponse;
       } else {
+        print("''''========get devices line 314 auth repo--'4---''");
         String? apiId = await SharedPreferencesMethod.getString(StorageKeys.API_ID);
 
         final apiResponse = await BaseRequesterMethods.baseRequester.baseGetAPI(Endpoints.GET_DEVICES_URL(apiId));

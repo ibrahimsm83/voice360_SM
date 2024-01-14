@@ -58,12 +58,15 @@ class BaseRequester {
     String bearerAuth = 'Bearer $token';
     http.Response response;
     try {
+      print("------base request.dart-----Url----1---${url}");
       response = await http.get(
         Uri.parse(url),
         headers: <String, String>{'Content-Type': 'application/json; charset=UTF-8', 'Authorization': bearerAuth},
       );
+      print("------base request.dart-----baseGetAPI----2---${response.body}");
       _logRequestOnAlice(response);
-      log(response.body);
+      print("------base request.dart----line no 68-Url----3---");
+      // log(response.body.toString());
       if (loading == true && loading != null) {
         CustomLoader.dismisLoader();
       }

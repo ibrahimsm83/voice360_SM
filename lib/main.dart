@@ -38,7 +38,7 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
-  ]).then((value) => runApp(MyApp()));
+  ]).then((value) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -66,16 +66,17 @@ class MyApp extends StatelessWidget {
             // fallbackLocale: const Locale('en', 'US'),
             getPages: AppRoutes.routes,
             initialRoute: Routes.LOGIN_SCREEN_ROUTE,
+            // initialRoute: Routes.LOGIN_SCREEN_ROUTE,
           ),
         );
       },
     );
   }
 
-  void _portraitModeOnly() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-  }
+  // void _portraitModeOnly() {
+  //   SystemChrome.setPreferredOrientations([
+  //     DeviceOrientation.portraitUp,
+  //     DeviceOrientation.portraitDown,
+  //   ]);
+  // }
 }

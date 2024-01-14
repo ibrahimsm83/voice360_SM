@@ -296,8 +296,8 @@ class _DialButtonState extends State<DialButton> with SingleTickerProviderStateM
           animation: _colorTween,
           builder: (context, child) => Container(
             color: Theme.of(context).extension<KAppColors>()?.buttonColor ?? Colors.white,
-            height: 70.h,
-            width: 70.h,
+            height: 75.h,
+            width: 75.w,
             padding: EdgeInsets.only(bottom: 10.h),
             child: Center(
                 child: widget.icon == null

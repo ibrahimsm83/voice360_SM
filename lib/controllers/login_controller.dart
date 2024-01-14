@@ -22,6 +22,7 @@ class LoginController extends GetxController {
   final _authRepo = AuthRepo();
 
   RxBool showLogin = false.obs;
+
   login() async {
     bool isFormValid = validateLoginForm();
     if (isFormValid) {
@@ -32,7 +33,7 @@ class LoginController extends GetxController {
         passwordController.text,
         isRemember.value,
       );
-      print("***********${res.toString()}");
+      print("*****1******${res.toString()}");
       Get.back();
       if (res.runtimeType == String) {
         CustomToast.showToast(res.toString(), true);
@@ -62,7 +63,7 @@ class LoginController extends GetxController {
         return false;
       }
     }
-    if (passwordController.text.length < 6) {
+    if (passwordController.text.length < 4) {
       CustomToast.showToast("Password must be 6 characters long", true);
       return false;
     }
