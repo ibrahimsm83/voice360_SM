@@ -125,6 +125,7 @@ class ChatInfoScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+
                       SizedBox(
                         height: 50.h,
                       ),
