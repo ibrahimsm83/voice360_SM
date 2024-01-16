@@ -31,6 +31,7 @@ class VoiceMailsController extends GetxController {
   TextEditingController searchController = TextEditingController();
 
   fetchVoiceMails() async {
+    print("fetch voice mails ---");
     voiceMails.clear();
     isVoiceMailsLoading = true;
     update();
@@ -78,7 +79,9 @@ class VoiceMailsController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     playerController = PlayerController();
+    print("init state voice mail called----1-");
     fetchVoiceMails();
+    print("init state Voice mail called----2-");
   }
 
   downloadVoicemail(id) async {

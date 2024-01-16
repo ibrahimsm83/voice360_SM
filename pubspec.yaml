@@ -73,7 +73,7 @@ dependencies:
   just_audio: ^0.9.28
   sprintf:
 #  image_downloader: ^0.31.0
-
+#  another_audio_recorder: ^1.1.0
   firebase_core: ^1.22.0
   firebase_messaging: ^13.0.1
   flutter_local_notifications: ^9.2.0

@@ -18,6 +18,7 @@ import '../widgets/custom_toast.dart';
 
 class ChatController extends GetxController {
   RxBool isLoading = false.obs;
+  RxBool isMicTapped = false.obs;
   RxBool isMessageLoading = false.obs;
   MessagesRepo repo = MessagesRepo();
   String myNumber = Get.arguments[1];

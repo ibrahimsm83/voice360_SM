@@ -30,170 +30,86 @@ class ChatScreen extends StatelessWidget {
 
   ChatController con = Get.put(ChatController());
 
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomSheet: Container(
-          height: 55.h,
-          // color: Colors.blue,
-          child: Column(
-            children: [
-              Divider(
-                height: 0,
-                color: Colors.grey,
+    return Obx(()=>
+           Scaffold(
+        bottomSheet:Visibility(
+            visible: !con.isMicTapped.value,
+            child: bottomSheetWidget(context),
+        replacement: bottomAudioSheet(context),
+        ),
+
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: Container(
+            margin: EdgeInsets.only(top: 10.h, left: 0.w),
+            child: GestureDetector(
+              onTap: () {
+                Get.back();
+              },
+              child: Icon(
+                Icons.arrow_back_ios,
+                color: AppTheme.colors(context)?.textColor,
+                size: 18.sp,
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 10.h,
-                        ),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () => con.sendMessage(isImage: true),
-                              child: Container(
-                                margin: EdgeInsets.only(left: 20.w, right: 20.w),
-                                height: 20.h,
-                                width: 20.h,
-                                child: Image.asset(
-                                  "assets/images/paperclip.png",
-                                  color: AppTheme.colors(context)?.textColor,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              width: 250.w,
-                              height: 30.h,
-                              alignment: Alignment.centerLeft,
-                              // color: Colors.blue,
-                              child: TextField(
-                                controller: con.messageController,
-                                style: TextStyle(fontSize: 14.sp),
-                                decoration: InputDecoration.collapsed(
-                                  hintStyle: TextStyle(
-                                    fontSize: 14.sp,
-                                  ),
-                                  hintText: "Write a message",
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Obx(
-                      () => GestureDetector(
-                        onTap: () => con.sendMessage(),
-                        child: Container(
-                          color: Colors.transparent,
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Container(
-                            margin: const EdgeInsets.only(
-                              right: 12,
-                              top: 12,
-                            ),
-                            padding: EdgeInsets.only(left: 4.w, right: 4.w, top: 4.w, bottom: 4.w),
-                            width: 32,
-                            height: 32,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                                border: con.isMessageLoading.value == true
-                                    ? null
-                                    : Border.all(width: 1.5, color: AppColors.black)),
-                            child: con.isMessageLoading.value == true
-                                ? CircularProgressIndicator(
-                                    color: AppColors.black,
-                                  )
-                                : Image.asset(
-                                    "assets/images/send_icon.jpg",
-                                  ),
-                          ),
-                        ),
+            ),
+          ),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          centerTitle: true,
+          title: Obx(
+            () => con.loadTitle.value
+                ? SizedBox.shrink()
+                : Container(
+                    padding: EdgeInsets.only(top: 10.h),
+                    child: Text(
+                      con.threadNumber ?? "",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                ],
-              ),
-            ],
-          )),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: Container(
-          margin: EdgeInsets.only(top: 10.h, left: 0.w),
-          child: GestureDetector(
-            onTap: () {
-              Get.back();
-            },
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: AppTheme.colors(context)?.textColor,
-              size: 18.sp,
-            ),
           ),
-        ),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        centerTitle: true,
-        title: Obx(
-          () => con.loadTitle.value
-              ? SizedBox.shrink()
-              : Container(
-                  padding: EdgeInsets.only(top: 10.h),
-                  child: Text(
-                    con.threadNumber ?? "",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => Scaffold(
-                        body: Padding(
-                          padding: const EdgeInsets.only(bottom: 40),
-                          child: HomeScreen(
-                            initialValue: con.threadNumber ?? "",
+          actions: [
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => Scaffold(
+                          body: Padding(
+                            padding: const EdgeInsets.only(bottom: 40),
+                            child: HomeScreen(
+                              initialValue: con.threadNumber ?? "",
+                            ),
                           ),
-                        ),
-                      )));
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 20, top: 7),
-              child: Icon(
-                Icons.phone,
-                color: AppTheme.colors(context)?.textColor,
+                        )));
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 20, top: 7),
+                child: Icon(
+                  Icons.phone,
+                  color: AppTheme.colors(context)?.textColor,
+                ),
               ),
             ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Get.toNamed(Routes.CHAT_DETAIL_ROUTE, arguments: con.threadNumber ?? "");
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 20, top: 7),
-              child: Icon(
-                Icons.info_outline,
-                color: AppTheme.colors(context)?.textColor,
+            GestureDetector(
+              onTap: () {
+                Get.toNamed(Routes.CHAT_DETAIL_ROUTE, arguments: con.threadNumber ?? "");
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 20, top: 7),
+                child: Icon(
+                  Icons.info_outline,
+                  color: AppTheme.colors(context)?.textColor,
+                ),
               ),
-            ),
-          )
-        ],
-      ),
-      body: Container(
-        child: Column(
+            )
+          ],
+        ),
+        body: Column(
           children: [
             Divider(
               height: 0,
@@ -239,5 +155,190 @@ class ChatScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+Widget bottomAudioSheet(BuildContext context){
+    return SizedBox(
+        height: 55.h,
+        // color: Colors.blue,
+        child: Column(
+          children: [
+            Divider(
+              height: 0,
+              color: Colors.grey,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 15.h,
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () => con.sendMessage(isImage: true),
+                            child: Container(
+                              margin: EdgeInsets.only(left: 10.w, right: 10.w),
+                              // height: 20.h,
+                              // width: 20.h,
+                              child: Icon(Icons.mic),
+                            ),
+                          ),
+                          Text("Recording.............",
+                          style: TextStyle(
+                            color: AppTheme.colors(context)?.textColor,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w500,
+                          ),),
+                          // Container(
+                          //   width: 250.w,
+                          //   height: 30.h,
+                          //   alignment: Alignment.centerLeft,
+                          //   // color: Colors.blue,
+                          //   child: Text(
+                          //     // controller: con.messageController,
+                          //     style: TextStyle(fontSize: 14.sp),
+                          //     decoration: InputDecoration.collapsed(
+                          //       hintStyle: TextStyle(
+                          //         fontSize: 14.sp,
+                          //       ),
+                          //       hintText: "Write a message",
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                    onTap: () {
+                      con.isMicTapped.value=false;
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Container(
+                        padding: EdgeInsets.only(left: 4.w, right: 4.w, top: 10.h, bottom: 4.h),
+                        width: 32,
+                        height: 32,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(),
+                            // color: Colors.,
+                        child:Icon(Icons.send,color: Colors.red,),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+
+          ],
+        ));
+}
+  Widget bottomSheetWidget(BuildContext context){
+    return SizedBox(
+        height: 55.h,
+        // color: Colors.blue,
+        child: Column(
+          children: [
+            Divider(
+              height: 0,
+              color: Colors.grey,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              con.isMicTapped.value=true;
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(left: 10.w, right: 0.w),
+                              // height: 20.h,
+                              // width: 20.h,
+                              child: Icon(Icons.mic),
+                            ),
+                          ),
+
+                          GestureDetector(
+                            onTap: () => con.sendMessage(isImage: true),
+                            child: Container(
+                              margin: EdgeInsets.only(left: 10.w, right: 20.w),
+                              height: 20.h,
+                              width: 20.h,
+                              child: Image.asset(
+                                "assets/images/paperclip.png",
+                                color: AppTheme.colors(context)?.textColor,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 250.w,
+                            height: 30.h,
+                            alignment: Alignment.centerLeft,
+                            // color: Colors.blue,
+                            child: TextField(
+                              controller: con.messageController,
+                              style: TextStyle(fontSize: 14.sp),
+                              decoration: InputDecoration.collapsed(
+                                hintStyle: TextStyle(
+                                  fontSize: 14.sp,
+                                ),
+                                hintText: "Write a message",
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Obx(
+                        () => GestureDetector(
+                      onTap: () => con.sendMessage(),
+                      child: Container(
+                        //color: Colors.red,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Container(
+                          // margin: const EdgeInsets.only(
+                          //   right: 12,
+                          //   top: 12,
+                          // ),
+                          padding: EdgeInsets.only(left: 4.w, right: 4.w, top: 4.w, bottom: 4.w),
+                          width: 32,
+                          height: 32,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              border: con.isMessageLoading.value == true
+                                  ? null
+                                  : Border.all(width: 1.5, color: AppColors.black)),
+                          child: con.isMessageLoading.value == true
+                              ? CircularProgressIndicator(
+                            color: AppColors.black,
+                          )
+                              : Image.asset(
+                            "assets/images/send_icon.jpg",
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+          ],
+        ));
   }
 }
